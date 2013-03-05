@@ -2,21 +2,13 @@
   "name": "generator-ig-job",
   "version": "0.0.1",
   "description": "Default Yeoman generator for scaffolding out a front-end web app",
-  "keywords": [
-    "yeoman-generator",
-    "web",
-    "app",
-    "front-end",
-    "h5bp",
-    "modernizr"
-  ],
-  "homepage": "https://github.com/yeoman/generator-webapp",
-  "bugs": "https://github.com/yeoman/generator-webapp/issues",
+  "homepage": "https://github.com/ft-interactive/generator-ig-job",
+  "bugs": "https://github.com/ft-interactive/generator-ig-job/issues",
   "author": "Chrome Developer Relations",
   "main": "app/index.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/yeoman/generator-webapp.git"
+    "url": "git://github.com/ft-interactive/generator-ig-job.git"
   },
   "scripts": {
     "test": "mocha --reporter spec"
