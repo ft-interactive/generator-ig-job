@@ -41,7 +41,7 @@ module.exports = function (grunt) {
                     '<%%= yeoman.app %>/*.html',
                     '{.tmp,<%%= yeoman.app %>}/styles/{,*/}*.css',
                     '{.tmp,<%%= yeoman.app %>}/scripts/{,*/}*.js',
-                    '<%%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,webp}'
+                    '<%%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp}'
                 ],
                 tasks: ['livereload']
             }
@@ -200,7 +200,7 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     cwd: '<%%= yeoman.app %>/images',
-                    src: '{,*/}*.{png,jpg,jpeg}',
+                    src: '{,*/}*.{png,jpg,jpeg,gif,webp}',
                     dest: '<%%= yeoman.dist %>/images'
                 }]
             }
@@ -245,7 +245,9 @@ module.exports = function (grunt) {
                     dest: '<%%= yeoman.dist %>',
                     src: [
                         '*.{ico,txt}',
-                        '.htaccess'
+                        '.htaccess',
+                        'styles/fonts/{,*/}*.{woff,eot,ttf,svg,pdf}',
+                        'images/{,*/}*.{gif,webp}',
                     ]
                 }]
             }
