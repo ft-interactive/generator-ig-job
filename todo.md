@@ -11,9 +11,11 @@
 * Purge Akamai URLs?
 * what htaccess directives are needed (that are not alread on the server?
 * a couple of basic unit tests to get started
-* auto-manage list of developers and record who created in package.json
-* github grunt setup tasks - add current job to github and enter github details in package.json
+* auto-manage list of developers and record who created in package.json (author, )
+* github grunt setup tasks - add current job to github and enter github details in package.json (repository, bugs)
 * show a list of highly recommended libraries in the help text of the generator (Underscore, D3, Angular, Handlebars)
+* Prompt user for optional description in generator - insert into package.json
+
 
 ## Possible subgenerators
 
