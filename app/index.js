@@ -37,16 +37,13 @@ AppGenerator.prototype.askFor = function askFor() {
   var cb = this.async();
 
   // welcome message
-  var welcome =
-  '\n     _-----_' +
-  '\n    |       |' +
-  '\n    |'+'--(o)--'.red+'|   .--------------------------.' +
-  '\n   `---------´  |    '+'Welcome to Yeoman,'.yellow.bold+'    |' +
-  '\n    '+'( '.yellow+'_'+'´U`'.yellow+'_'+' )'.yellow+'   |   '+'ladies and gentlemen!'.yellow.bold+'  |' +
-  '\n    /___A___\\   \'__________________________\'' +
-  '\n     |  ~  |'.yellow +
-  '\n   __'+'\'.___.\''.yellow+'__' +
-  '\n ´   '+'`  |'.red+'° '+'´ Y'.red+' `\n';
+  var welcome = 
+'\n    _____ _____   ___       _                      _   _           ' +
+'\n |  ___|_   _| |_ _|_ __ | |_ ___ _ __ __ _  ___| |_(_)_   _____ ' +
+'\n | |_    | |    | || \'_ \\| __/ _ \\ \'__/ _` |/ __| __| \\ \\ / / _ \\' +
+'\n |  _|   | |    | || | | | ||  __/ | | (_| | (__| |_| |\\ V /  __/' +
+'\n |_|     |_|   |___|_| |_|\\__\\___|_|  \\__,_|\\___|\\__|_| \\_/ \\___|' +
+'\n                                                                 ';
 
   console.log(welcome);
   console.log('Out of the box I include HTML5 Boilerplate, jQuery and Modernizr.');
@@ -126,7 +123,7 @@ AppGenerator.prototype.mainStylesheet = function mainStylesheet() {
 
 AppGenerator.prototype.writeIndex = function writeIndex() {
   // prepare default content text
-  var defaults = ['HTML5 Boilerplate', 'Twitter Bootstrap'];
+  var defaults = ['Interactive Graphics standard files', 'HTML5 Boilerplate', 'Twitter Bootstrap'];
   var contentText = [
     '        <div class="container">',
     '            <div class="hero-unit">',
@@ -237,6 +234,7 @@ AppGenerator.prototype.app = function app() {
   this.mkdir('app');
   this.mkdir('app/scripts');
   this.mkdir('app/styles');
+  this.mkdir('app/styles/fonts');
   this.mkdir('app/images');
   this.write('app/index.html', this.indexFile);
   this.write('app/scripts/main.js', this.mainJsFile);
