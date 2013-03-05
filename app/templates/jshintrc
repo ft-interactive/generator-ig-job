@@ -1,6 +1,10 @@
 {
     "node": true,
     "browser": true,
+    "global": {
+        "$": true,
+        "IG": true
+    },
     "es5": true,
     "esnext": true,
     "bitwise": true,
