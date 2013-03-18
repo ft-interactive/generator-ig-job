@@ -114,11 +114,9 @@ module.exports = function (grunt) {
         coffee: {
             dist: {
                 files: [{
-                    // rather than compiling multiple files here you should
-                    // require them into your main .coffee file
                     expand: true,
                     cwd: '<%%= yeoman.app %>/scripts',
-                    src: '*.coffee',
+                    src: '{,*/}*.coffee',
                     dest: '.tmp/scripts',
                     ext: '.js'
                 }]
@@ -126,9 +124,10 @@ module.exports = function (grunt) {
             test: {
                 files: [{
                     expand: true,
-                    cwd: '.tmp/spec',
-                    src: '*.coffee',
-                    dest: 'test/spec'
+                    cwd: 'test/spec',
+                    src: '{,*/}*.coffee',
+                    dest: '.tmp/spec',
+                    ext: '.js'
                 }]
             }
         },
@@ -153,8 +152,8 @@ module.exports = function (grunt) {
         // but still available if needed
         /*concat: {
             dist: {}
-        },*/
-        <% if (includeRequireJS) { %>requirejs: {
+        },*/<% if (includeRequireJS) { %>
+        requirejs: {
             dist: {
                 // Options: https://github.com/jrburke/r.js/blob/master/build/example.build.js
                 options: {
@@ -205,6 +204,16 @@ module.exports = function (grunt) {
                 }]
             }
         },
+        svgmin: {
+            dist: {
+                files: [{
+                    expand: true,
+                    cwd: '<%%= yeoman.app %>/images',
+                    src: '{,*/}*.svg',
+                    dest: '<%%= yeoman.dist %>/images'
+                }]
+            }
+        },
         cssmin: {
             dist: {
                 files: {
@@ -236,6 +245,7 @@ module.exports = function (grunt) {
                 }]
             }
         },
+        // Put files not handled in other tasks here
         copy: {
             dist: {
                 files: [{
@@ -246,18 +256,20 @@ module.exports = function (grunt) {
                     src: [
                         '*.{ico,txt}',
                         '.htaccess',
-                        'styles/fonts/{,*/}*.{woff,eot,ttf,svg,pdf}',
-                        'images/{,*/}*.{gif,webp}',
-
+                        'images/{,*/}*.{webp,gif}',
+                        'styles/fonts/*'
                     ]
                 }]
             }
-        },
+        }<% if (includeRequireJS) { %>,
         bower: {
+            options: {
+                exclude: ['modernizr']
+            },
             all: {
                 rjsConfig: '<%%= yeoman.app %>/scripts/main.js'
             }
-        }
+        }<% } %>
     });
 
     grunt.renameTask('regarde', 'watch');
@@ -293,6 +305,7 @@ module.exports = function (grunt) {
         'useminPrepare',<% if (includeRequireJS) { %>
         'requirejs',<% } %>
         'imagemin',
+        'svgmin',
         'htmlmin',
         'concat',
         'cssmin',
