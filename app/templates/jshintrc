@@ -1,7 +1,8 @@
 {
     "node": true,
     "browser": true,
-    "global": {
+    "jquery": true,
+    "globals": {
         "$": true,
         "IG": true
     },
