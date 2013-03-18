@@ -233,6 +233,17 @@ AddType text/x-vcard                        vcf
 
 
 # ----------------------------------------------------------------------
+# Cache-Control headers
+# ----------------------------------------------------------------------
+
+# add public to all images
+
+<filesMatch ".(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf)$">
+  Header append Cache-Control "public"
+</filesMatch>
+
+
+# ----------------------------------------------------------------------
 # Prevent mobile network providers from modifying your site
 # ----------------------------------------------------------------------
 
