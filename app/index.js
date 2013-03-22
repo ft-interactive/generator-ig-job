@@ -22,7 +22,6 @@ function AppGenerator(args, options, config) {
 
   this.indexFile = this.readFileAsString(path.join(this.sourceRoot(), 'index.html'));
   this.mainJsFile = '';
-  this.mainCoffeeFile = 'console.log "\'Allo from CoffeeScript!"';
 
   this.on('end', function () {
     console.log('\nI\'m all done. Just run ' + 'npm install && bower install'.bold.yellow + ' to install the required dependencies.');
@@ -117,7 +116,7 @@ AppGenerator.prototype.mainStylesheet = function mainStylesheet() {
   if (this.compassBootstrap) {
     this.write('app/styles/main.scss', '@import \'sass-bootstrap/lib/bootstrap\';\n\n.hero-unit {\n    margin: 50px auto 0 auto;\n    width: 300px;\n}');
   } else {
-    this.write('app/styles/main.css', 'body {\n    background: #fafafa;\n}\n\n.hero-unit {\n    margin: 50px auto 0 auto;\n    width: 300px;\n}');
+    this.write('app/styles/main.scss', 'body {\n    background: #fafafa;\n}\n\n.hero-unit {\n    margin: 50px auto 0 auto;\n    width: 300px;\n}');
   }
 };
 
@@ -127,7 +126,7 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
   var contentText = [
     '        <div class="container">',
     '            <div class="hero-unit">',
-    '                <h1>\'Allo, \'Allo!</h1>',
+    '                <h1>New Interactive, Graphic</h1>',
     '                <p>You now have</p>',
     '                <ul>'
   ];
@@ -169,7 +168,7 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
   if (this.includeRequireJS) {
     defaults.push('RequireJS');
   } else {
-    this.mainJsFile = 'console.log(\'\\\'Allo \\\'Allo!\');';
+    this.mainJsFile = '';
   }
 
   // iterate over defaults and create content string
@@ -180,7 +179,7 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
   contentText = contentText.concat([
     '                </ul>',
     '                <p>installed.</p>',
-    '                <h3>Enjoy coding! - Yeoman</h3>',
+    '                <h3>Enjoy coding!</h3>',
     '            </div>',
     '        </div>',
     ''
@@ -238,5 +237,4 @@ AppGenerator.prototype.app = function app() {
   this.mkdir('app/images');
   this.write('app/index.html', this.indexFile);
   this.write('app/scripts/main.js', this.mainJsFile);
-  this.write('app/scripts/hello.coffee', this.mainCoffeeFile);
 };
