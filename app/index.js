@@ -105,6 +105,13 @@ AppGenerator.prototype.h5bp = function h5bp() {
   this.copy('htaccess', 'app/.htaccess');
 };
 
+AppGenerator.prototype.bootstrapImg = function bootstrapImg() {
+  if (this.compassBootstrap) {
+    this.copy('glyphicons-halflings.png', 'app/images/glyphicons-halflings.png');
+    this.copy('glyphicons-halflings-white.png', 'app/images/glyphicons-halflings-white.png');
+  }
+};
+
 AppGenerator.prototype.bootstrapJs = function bootstrapJs() {
   // TODO: create a Bower component for this
   if (this.includeRequireJS) {
@@ -114,7 +121,7 @@ AppGenerator.prototype.bootstrapJs = function bootstrapJs() {
 
 AppGenerator.prototype.mainStylesheet = function mainStylesheet() {
   if (this.compassBootstrap) {
-    this.write('app/styles/main.scss', '@import \'sass-bootstrap/lib/bootstrap\';\n\n.hero-unit {\n    margin: 50px auto 0 auto;\n    width: 300px;\n}');
+    this.write('app/styles/main.scss', '$iconSpritePath: "../images/glyphicons-halflings.png";\n$iconWhiteSpritePath: "../images/glyphicons-halflings-white.png";\n\n@import \'sass-bootstrap/lib/bootstrap\';\n\n.hero-unit {\n    margin: 50px auto 0 auto;\n    width: 300px;\n}');
   } else {
     this.write('app/styles/main.scss', 'body {\n    background: #fafafa;\n}\n\n.hero-unit {\n    margin: 50px auto 0 auto;\n    width: 300px;\n}');
   }
