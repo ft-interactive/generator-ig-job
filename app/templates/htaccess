@@ -233,6 +233,26 @@ AddType text/x-vcard                        vcf
 
 
 # ----------------------------------------------------------------------
+# Cache-Control headers
+# ----------------------------------------------------------------------
+
+# add public to all images
+
+<IfModule mod_headers.c>
+  <FilesMatch ".(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf)$">
+    Header append Cache-Control "public"
+  </FilesMatch>
+</IfModule>
+
+# add public to fonts
+<IfModule mod_headers.c>
+  <FilesMatch "\.(eot|font.css|otf|ttc|ttf|woff)$">
+    Header append Cache-Control "public"
+  </FilesMatch>
+</IfModule>
+
+
+# ----------------------------------------------------------------------
 # Prevent mobile network providers from modifying your site
 # ----------------------------------------------------------------------
 
@@ -403,3 +423,36 @@ AddCharset utf-8 .atom .css .js .json .rss .vtt .xml
   Deny from all
   Satisfy All
 </FilesMatch>
+
+#<IfModule mod_rewrite.c>
+# ----------------------------------------------------------------------
+#  General Rule
+#
+# https://gist.github.com/gustavobeavis/4962250
+# http://www.josscrowcroft.com/2012/code/htaccess-for-html5-history-pushstate-url-routing/
+# ----------------------------------------------------------------------
+ 
+# Redirect all files and paths to index.html
+# RewriteRule ^index.html(.*)$ - [L,QSA]
+ 
+# # ----------------------------------------------------------------------
+# #  Exception to the general rule 
+# # ----------------------------------------------------------------------
+ 
+# # Declare path and files where don't apply general rules
+ 
+# # scripts/./../* -  not apply general rule redirect of all folders and files to path "/scripts"
+# RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-d
+# RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-f
+# RewriteRule scripts/(.*)$ js/$1 [L,QSA]
+ 
+# # images/./../* -  not apply general rule redirect of all folders and files to path "/images"
+# RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-d
+# RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-f
+# RewriteRule images/(.*)$ img/$1 [L,QSA]
+ 
+# # styles/./../* -  not apply general rule redirect of all folders and files to path "/styles"
+# RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-d
+# RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-f
+# RewriteRule style/(.*)$ css/$1 [L,QSA]
+#</IfModule>
