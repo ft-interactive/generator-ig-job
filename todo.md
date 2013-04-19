@@ -1,5 +1,7 @@
 # TODO
 
+
+* ftcom iframe html page in template
 * How do we spcify the generator on the command line? how do people install and manage the generator?
 * Rewrite URLs to ft-static.com (Akamai CDN)
 * retain open source licence comments in minified scripts
@@ -22,3 +24,4 @@
 * Page furniture
 * Page title
 * get google spreadsheet data
+* basic no hands project 

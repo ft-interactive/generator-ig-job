@@ -1,12 +1,11 @@
 'use strict';
 var util = require('util');
 var path = require('path');
+var spawn = require('child_process').spawn;
 var yeoman = require('yeoman-generator');
 
 
-module.exports = AppGenerator;
-
-function AppGenerator(args, options, config) {
+var AppGenerator = module.exports = function Appgenerator(args, options, config) {
   yeoman.generators.Base.apply(this, arguments);
 
   // setup the test-framework property, Gruntfile template will need this
@@ -24,11 +23,11 @@ function AppGenerator(args, options, config) {
   this.mainJsFile = '';
 
   this.on('end', function () {
-    console.log('\nI\'m all done. Just run ' + 'npm install && bower install'.bold.yellow + ' to install the required dependencies.');
+    this.installDependencies({ skipInstall: options['skip-install'] });
   });
 
   this.pkg = JSON.parse(this.readFileAsString(path.join(__dirname, '../package.json')));
-}
+};
 
 util.inherits(AppGenerator, yeoman.generators.NamedBase);
 

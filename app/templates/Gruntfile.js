@@ -34,14 +34,14 @@ module.exports = function (grunt) {
             },
             compass: {
                 files: ['<%%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
-                tasks: ['compass']
+                tasks: ['compass:server']
             },
             livereload: {
                 files: [
                     '<%%= yeoman.app %>/*.html',
                     '{.tmp,<%%= yeoman.app %>}/styles/{,*/}*.css',
                     '{.tmp,<%%= yeoman.app %>}/scripts/{,*/}*.js',
-                    '<%%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp}'
+                    '<%%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
                 ],
                 tasks: ['livereload']
             }
@@ -111,7 +111,7 @@ module.exports = function (grunt) {
                 '!<%%= yeoman.app %>/scripts/vendor/*',
                 'test/spec/{,*/}*.js'
             ]
-        },
+        },<% if (testFramework === 'mocha') { %>
         mocha: {
             all: {
                 options: {
@@ -119,7 +119,15 @@ module.exports = function (grunt) {
                     urls: ['http://localhost:<%%= connect.options.port %>/index.html']
                 }
             }
-        },
+        },<% } else if (testFramework === 'jasmine') { %>
+        jasmine: {
+            all: {
+                /*src: '',*/
+                options: {
+                    specs: 'test/spec/{,*/}*.js'
+                }
+            }
+        },<% } %>
         coffee: {
             dist: {
                 files: [{
@@ -279,6 +287,23 @@ module.exports = function (grunt) {
                     ]
                 }]
             }
+        },
+        concurrent: {
+            server: [
+                'coffee:dist',
+                'compass:server'
+            ],
+            test: [
+                'coffee',
+                'compass'
+            ],
+            dist: [
+                'coffee',
+                'compass:dist',
+                'imagemin',
+                'svgmin',
+                'htmlmin'
+            ]
         }<% if (includeRequireJS) { %>,
         bower: {
             options: {
@@ -299,8 +324,7 @@ module.exports = function (grunt) {
 
         grunt.task.run([
             'clean:server',
-            'coffee:dist',
-            'compass:server',
+            'concurrent:server',
             'livereload-start',
             'connect:livereload',
             'open',
@@ -310,23 +334,19 @@ module.exports = function (grunt) {
 
     grunt.registerTask('test', [
         'clean:server',
-        'coffee',
-        'compass',
-        'connect:test',
-        'mocha'
+        'concurrent:test',
+        'connect:test',<% if (testFramework === 'mocha') { %>
+        'mocha'<% } else if (testFramework === 'jasmine') { %>
+        'jasmine'<% } %>
     ]);
 
     grunt.registerTask('build', [
         'clean:dist',
-        'coffee',
-        'compass:dist',
-        'useminPrepare',<% if (includeRequireJS) { %>
+        'useminPrepare',
+        'concurrent:dist',<% if (includeRequireJS) { %>
         'requirejs',<% } %>
-        'imagemin',
-        'svgmin',
-        'htmlmin',
-        'concat',
         'cssmin',
+        'concat',
         'uglify',
         'copy',
         'rev',
