@@ -1,10 +1,11 @@
 {
   "name": "generator-ig-job",
+  "private": "true",
   "version": "0.0.1",
-  "description": "Default Yeoman generator for scaffolding out a front-end web app",
+  "description": "Default IG generator for scaffolding out an interactive",
   "homepage": "https://github.com/ft-interactive/generator-ig-job",
   "bugs": "https://github.com/ft-interactive/generator-ig-job/issues",
-  "author": "Chrome Developer Relations",
+  "author": "FT Interactive",
   "main": "app/index.js",
   "repository": {
     "type": "git",
