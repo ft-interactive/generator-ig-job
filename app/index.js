@@ -29,12 +29,11 @@ var AppGenerator = module.exports = function Appgenerator(args, options, config)
   this.pkg = JSON.parse(this.readFileAsString(path.join(__dirname, '../package.json')));
 };
 
-util.inherits(AppGenerator, yeoman.generators.NamedBase);
+util.inherits(AppGenerator, yeoman.generators.Base);
 
 AppGenerator.prototype.askFor = function askFor() {
   var cb = this.async();
 
-  // welcome message
   var welcome = 
 '\n    _____ _____   ___       _                      _   _           ' +
 '\n |  ___|_   _| |_ _|_ __ | |_ ___ _ __ __ _  ___| |_(_)_   _____ ' +
@@ -44,30 +43,34 @@ AppGenerator.prototype.askFor = function askFor() {
 '\n                                                                 ';
 
   console.log(welcome);
+  console.log(this.yeoman);
   console.log('Out of the box I include HTML5 Boilerplate, jQuery and Modernizr.');
 
   var prompts = [{
+    type: 'confirm',
     name: 'compassBootstrap',
     message: 'Would you like to include Twitter Bootstrap for Sass?',
-    default: 'Y/n',
-    warning: 'Yes: All Twitter Bootstrap files will be placed into the styles directory.'
+    default: true
   },
   {
+    type: 'confirm',
     name: 'includeRequireJS',
     message: 'Would you like to include RequireJS (for AMD support)?',
-    default: 'Y/n',
-    warning: 'Yes: RequireJS will be placed into the JavaScript vendor directory.'
+    default: true
+  },
+  {
+    type: 'confirm',
+    name: 'autoprefixer',
+    message: 'Would you like to use autoprefixer for your CSS?',
+    default: false
   }];
 
-  this.prompt(prompts, function (err, props) {
-    if (err) {
-      return this.emit('error', err);
-    }
-
+  this.prompt(prompts, function (props) {
     // manually deal with the response, get back and store the results.
     // we change a bit this way of doing to automatically do this in the self.prompt() method.
-    this.compassBootstrap = (/y/i).test(props.compassBootstrap);
-    this.includeRequireJS = (/y/i).test(props.includeRequireJS);
+    this.compassBootstrap = props.compassBootstrap;
+    this.includeRequireJS = props.includeRequireJS;
+    this.autoprefixer = props.autoprefixer;
 
     cb();
   }.bind(this));
@@ -88,7 +91,7 @@ AppGenerator.prototype.git = function git() {
 
 AppGenerator.prototype.bower = function bower() {
   this.copy('bowerrc', '.bowerrc');
-  this.copy('_component.json', 'component.json');
+  this.copy('_bower.json', 'bower.json');
 };
 
 AppGenerator.prototype.jshint = function jshint() {
@@ -113,126 +116,76 @@ AppGenerator.prototype.bootstrapImg = function bootstrapImg() {
 
 AppGenerator.prototype.bootstrapJs = function bootstrapJs() {
   // TODO: create a Bower component for this
-  if (this.includeRequireJS) {
+  if (this.compassBootstrap) {
     this.copy('bootstrap.js', 'app/scripts/vendor/bootstrap.js');
   }
 };
 
 AppGenerator.prototype.mainStylesheet = function mainStylesheet() {
   if (this.compassBootstrap) {
-    this.write('app/styles/main.scss', '$iconSpritePath: "../images/glyphicons-halflings.png";\n$iconWhiteSpritePath: "../images/glyphicons-halflings-white.png";\n\n@import \'sass-bootstrap/lib/bootstrap\';\n\n.hero-unit {\n    margin: 50px auto 0 auto;\n    width: 300px;\n}');
+    this.copy('boostrap.scss', 'app/styles/main.scss');
   } else {
-    this.write('app/styles/main.scss', 'body {\n    background: #fafafa;\n}\n\n.hero-unit {\n    margin: 50px auto 0 auto;\n    width: 300px;\n}');
+    this.copy('plain.scss', 'app/styles/main.scss');
   }
 };
 
 AppGenerator.prototype.writeIndex = function writeIndex() {
   // prepare default content text
-  var defaults = ['Interactive Graphics standard files', 'HTML5 Boilerplate', 'Twitter Bootstrap'];
-  var contentText = [
-    '        <div class="container">',
-    '            <div class="hero-unit">',
-    '                <h1>New Interactive, Graphic</h1>',
-    '                <p>You now have</p>',
-    '                <ul>'
-  ];
+  var defaults = [];
+  var contentText = [];
 
   if (!this.includeRequireJS) {
     this.indexFile = this.appendScripts(this.indexFile, 'scripts/main.js', [
-      'components/jquery/jquery.js',
+      'bower_components/jquery/jquery.js',
       'scripts/main.js'
     ]);
-
-    this.indexFile = this.appendFiles({
-      html: this.indexFile,
-      fileType: 'js',
-      optimizedPath: 'scripts/coffee.js',
-      sourceFileList: ['scripts/hello.js'],
-      searchPath: '.tmp'
-    });
   }
 
   if (this.compassBootstrap && !this.includeRequireJS) {
     // wire Twitter Bootstrap plugins
     this.indexFile = this.appendScripts(this.indexFile, 'scripts/plugins.js', [
-      'components/sass-bootstrap/js/bootstrap-affix.js',
-      'components/sass-bootstrap/js/bootstrap-alert.js',
-      'components/sass-bootstrap/js/bootstrap-dropdown.js',
-      'components/sass-bootstrap/js/bootstrap-tooltip.js',
-      'components/sass-bootstrap/js/bootstrap-modal.js',
-      'components/sass-bootstrap/js/bootstrap-transition.js',
-      'components/sass-bootstrap/js/bootstrap-button.js',
-      'components/sass-bootstrap/js/bootstrap-popover.js',
-      'components/sass-bootstrap/js/bootstrap-typeahead.js',
-      'components/sass-bootstrap/js/bootstrap-carousel.js',
-      'components/sass-bootstrap/js/bootstrap-scrollspy.js',
-      'components/sass-bootstrap/js/bootstrap-collapse.js',
-      'components/sass-bootstrap/js/bootstrap-tab.js'
+      'bower_components/sass-bootstrap/js/bootstrap-affix.js',
+      'bower_components/sass-bootstrap/js/bootstrap-alert.js',
+      'bower_components/sass-bootstrap/js/bootstrap-dropdown.js',
+      'bower_components/sass-bootstrap/js/bootstrap-tooltip.js',
+      'bower_components/sass-bootstrap/js/bootstrap-modal.js',
+      'bower_components/sass-bootstrap/js/bootstrap-transition.js',
+      'bower_components/sass-bootstrap/js/bootstrap-button.js',
+      'bower_components/sass-bootstrap/js/bootstrap-popover.js',
+      'bower_components/sass-bootstrap/js/bootstrap-typeahead.js',
+      'bower_components/sass-bootstrap/js/bootstrap-carousel.js',
+      'bower_components/sass-bootstrap/js/bootstrap-scrollspy.js',
+      'bower_components/sass-bootstrap/js/bootstrap-collapse.js',
+      'bower_components/sass-bootstrap/js/bootstrap-tab.js'
     ]);
   }
 
-  if (this.includeRequireJS) {
-    defaults.push('RequireJS');
-  } else {
+  if (!this.includeRequireJS) {
     this.mainJsFile = '';
   }
 
-  // iterate over defaults and create content string
-  defaults.forEach(function (el) {
-    contentText.push('                    <li>' + el  +'</li>');
-  });
-
-  contentText = contentText.concat([
-    '                </ul>',
-    '                <p>installed.</p>',
-    '                <h3>Enjoy coding!</h3>',
-    '            </div>',
-    '        </div>',
-    ''
-  ]);
-
-  // append the default content
-  this.indexFile = this.indexFile.replace('<body>', '<body>\n' + contentText.join('\n'));
 };
 
 // TODO(mklabs): to be put in a subgenerator like rjs:app
 AppGenerator.prototype.requirejs = function requirejs() {
-  if (this.includeRequireJS) {
-    this.indexFile = this.appendScripts(this.indexFile, 'scripts/main.js', ['components/requirejs/require.js'], {
-      'data-main': 'scripts/main'
-    });
-
-    // add a basic amd module
-    this.write('app/scripts/app.js', [
-      '/*global define */',
-      'define([], function () {',
-      '    \'use strict\';\n',
-      '    return \'\\\'Allo \\\'Allo!\';',
-      '});'
-    ].join('\n'));
-
-    this.mainJsFile = [
-      'require.config({',
-      '    paths: {',
-      '        jquery: \'../components/jquery/jquery\',',
-      '        bootstrap: \'vendor/bootstrap\'',
-      '    },',
-      '    shim: {',
-      '        bootstrap: {',
-      '            deps: [\'jquery\'],',
-      '            exports: \'jquery\'',
-      '        }',
-      '    }',
-      '});',
-      '',
-      'require([\'app\', \'jquery\', \'bootstrap\'], function (app, $) {',
-      '    \'use strict\';',
-      '    // use app here',
-      '    console.log(app);',
-      '    console.log(\'Running jQuery %s\', $().jquery);',
-      '});'
-    ].join('\n');
+  if (!this.includeRequireJS) {
+    return;
   }
+
+  this.indexFile = this.appendScripts(this.indexFile, 'scripts/main.js', ['bower_components/requirejs/require.js'], {
+    'data-main': 'scripts/main'
+  });
+
+  // add a basic amd module
+  this.write('app/scripts/app.js', [
+    '/*global define */',
+    'define([], function () {',
+    '    \'use strict\';\n',
+    '    return \'\\\'Allo \\\'Allo!\';',
+    '});'
+  ].join('\n'));
+
+  this.template('require_main.js', 'app/scripts/main.js');
 };
 
 AppGenerator.prototype.app = function app() {
@@ -242,5 +195,7 @@ AppGenerator.prototype.app = function app() {
   this.mkdir('app/styles/fonts');
   this.mkdir('app/images');
   this.write('app/index.html', this.indexFile);
-  this.write('app/scripts/main.js', this.mainJsFile);
+  if (!this.includeRequireJS) {
+    this.write('app/scripts/main.js', '');
+  }
 };
