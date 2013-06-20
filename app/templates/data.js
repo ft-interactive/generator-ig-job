@@ -1,4 +1,5 @@
-/*global spreadsheet:true, Furniture:true */
+/*global spreadsheet:true, Furniture:true, getIGSpreadsheet:true */
+
 
 (function (window, $) {
 
@@ -22,7 +23,7 @@
   };
 
   spreadsheet.get = function get(successCallback) {
-    
+
     successCallback = successCallback || function(){};
 
     // do the Bertha ajax request
@@ -39,4 +40,4 @@
     $(document.body).removeClass('invisible');
   });
 
-})(this, jQuery);
+}(this, jQuery));

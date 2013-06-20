@@ -1,3 +1,5 @@
+/*jshint indent:4 */
+
 // Generated on <%= (new Date).toISOString().split('T')[0] %> using <%= pkg.name %> <%= pkg.version %>
 'use strict';
 var LIVERELOAD_PORT = 35729;
@@ -118,8 +120,7 @@ module.exports = function (grunt) {
             all: [
                 'Gruntfile.js',
                 '<%%= yeoman.app %>/scripts/{,*/}*.js',
-                '!<%%= yeoman.app %>/scripts/vendor/*',
-                'test/spec/{,*/}*.js'
+                '!<%%= yeoman.app %>/scripts/vendor/*'
             ]
         },<% if (testFramework === 'mocha') { %>
         mocha: {
