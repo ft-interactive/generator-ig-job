@@ -26,6 +26,8 @@ var AppGenerator = module.exports = function Appgenerator(args, options, config)
     this.installDependencies({ skipInstall: options['skip-install'] });
   });
 
+  this.yeoman = this.readFileAsString(path.join(__dirname, 'BANNER'));
+
   this.pkg = JSON.parse(this.readFileAsString(path.join(__dirname, '../package.json')));
 };
 
@@ -33,18 +35,7 @@ util.inherits(AppGenerator, yeoman.generators.Base);
 
 AppGenerator.prototype.askFor = function askFor() {
   var cb = this.async();
-
-  var welcome = 
-'\n    _____ _____   ___       _                      _   _           ' +
-'\n |  ___|_   _| |_ _|_ __ | |_ ___ _ __ __ _  ___| |_(_)_   _____ ' +
-'\n | |_    | |    | || \'_ \\| __/ _ \\ \'__/ _` |/ __| __| \\ \\ / / _ \\' +
-'\n |  _|   | |    | || | | | ||  __/ | | (_| | (__| |_| |\\ V /  __/' +
-'\n |_|     |_|   |___|_| |_|\\__\\___|_|  \\__,_|\\___|\\__|_| \\_/ \\___|' +
-'\n                                                                 ';
-
-  console.log(welcome);
   console.log(this.yeoman);
-  console.log('Out of the box I include HTML5 Boilerplate, jQuery and Modernizr.');
 
   var prompts = [{
     type: 'confirm',
@@ -65,15 +56,22 @@ AppGenerator.prototype.askFor = function askFor() {
     default: false
   }];
 
-  this.prompt(prompts, function (props) {
-    // manually deal with the response, get back and store the results.
-    // we change a bit this way of doing to automatically do this in the self.prompt() method.
-    this.compassBootstrap = props.compassBootstrap;
-    this.includeRequireJS = props.includeRequireJS;
-    this.autoprefixer = props.autoprefixer;
+  // Don't bother to prompt at the moment
+  // this.prompt(prompts, function (props) {
+  //    manually deal with the response, get back and store the results.
+  //    we change a bit this way of doing to automatically do this in the self.prompt() method.
+  //    this.compassBootstrap = props.compassBootstrap;
+  //    this.includeRequireJS = props.includeRequireJS;
+  //    this.autoprefixer = props.autoprefixer;
 
-    cb();
-  }.bind(this));
+  //    cb();
+  // }.bind(this));
+
+  // Hard coded options
+  this.compassBootstrap = false;
+  this.includeRequireJS = false;
+  this.autoprefixer = true;
+  cb();
 };
 
 AppGenerator.prototype.gruntfile = function gruntfile() {
@@ -103,7 +101,6 @@ AppGenerator.prototype.editorConfig = function editorConfig() {
 };
 
 AppGenerator.prototype.h5bp = function h5bp() {
-  this.copy('favicon.ico', 'app/favicon.ico');
   this.copy('htaccess', 'app/.htaccess');
 };
 
@@ -125,6 +122,7 @@ AppGenerator.prototype.mainStylesheet = function mainStylesheet() {
   if (this.compassBootstrap) {
     this.copy('boostrap.scss', 'app/styles/main.scss');
   } else {
+    this.copy('_var.scss', 'app/styles/_var.scss');
     this.copy('plain.scss', 'app/styles/main.scss');
   }
 };
@@ -137,6 +135,11 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
   if (!this.includeRequireJS) {
     this.indexFile = this.appendScripts(this.indexFile, 'scripts/main.js', [
       'bower_components/jquery/jquery.js',
+      'bower_components/ig-fill/fill.js',
+      'bower_components/ig-furniture/furniture.js',
+      'bower_components/bertha-ig-gist/request.js',
+      'scripts/config.js',
+      'scripts/data.js',
       'scripts/main.js'
     ]);
   }
@@ -161,8 +164,15 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
   }
 
   if (!this.includeRequireJS) {
-    this.mainJsFile = '';
+    this.mainJsFile = this.readFileAsString(path.join(this.sourceRoot(), 'main.js'));
   }
+
+  // insert body Apache SSI tags
+  this.indexFile = this.indexFile.replace('<body>', '<body>\n      <!--#include virtual="/inc/fallback.html" -->\n      <!--#include virtual="/inc/extras-foot-1.html" -->\n');
+  this.indexFile = this.indexFile.replace('</body>', '\n      <!--#include virtual="/inc/extras-foot-2.html" -->\n    </body>');
+
+  // this is the simplest way to include the body classes
+  this.indexFile = this.indexFile.replace('<body>',  '<body class="wide top-border invisible">');
 
 };
 
@@ -194,8 +204,13 @@ AppGenerator.prototype.app = function app() {
   this.mkdir('app/styles');
   this.mkdir('app/styles/fonts');
   this.mkdir('app/images');
+  this.mkdir('app/images/content');
   this.write('app/index.html', this.indexFile);
   if (!this.includeRequireJS) {
-    this.write('app/scripts/main.js', '');
+
+    this.copy('config.js', 'app/scripts/config.js');
+    this.copy('data.js', 'app/scripts/data.js');
+
+    this.write('app/scripts/main.js', this.mainJsFile);
   }
 };

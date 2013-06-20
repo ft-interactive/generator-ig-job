@@ -1,13 +1,18 @@
-Options +IncludesNOEXEC
-AddHandler server-parsed .html
-AddType text/html .html
-AddOutputFilter INCLUDES .html
-
 # Apache configuration file
 
 # (!) Using `.htaccess` files slows down Apache, therefore, if you have access
 # to the main server config file (usually called `httpd.conf`), you should add
 # this logic there: http://httpd.apache.org/docs/current/howto/htaccess.html.
+
+
+# ----------------------------------------------------------------------
+# Turn on Apache Server-side includes (SSI) for all html files
+# ----------------------------------------------------------------------
+
+Options +IncludesNOEXEC
+AddHandler server-parsed .html
+AddType text/html .html
+AddOutputFilter INCLUDES .html
 
 
 # ----------------------------------------------------------------------
@@ -36,7 +41,7 @@ AddOutputFilter INCLUDES .html
 # code.google.com/p/html5security/wiki/CrossOriginRequestSecurity
 
 <IfModule mod_headers.c>
-Header set Access-Control-Allow-Origin "*"
+  Header set Access-Control-Allow-Origin "*"
 </IfModule>
 
 
@@ -187,7 +192,7 @@ AddType text/x-vcard                        vcf
   ExpiresByType text/cache-manifest       "access plus 0 seconds"
 
 # Your document html
-  ExpiresByType text/html                 "access plus 0 seconds"
+  ExpiresByType text/html                 "access plus 30 seconds"
 
 # Data
   ExpiresByType application/json          "access plus 0 seconds"
@@ -202,23 +207,23 @@ AddType text/x-vcard                        vcf
   ExpiresByType image/x-icon              "access plus 1 week"
 
 # Media: images, video, audio
-  ExpiresByType audio/ogg                 "access plus 1 month"
-  ExpiresByType image/gif                 "access plus 1 month"
-  ExpiresByType image/jpeg                "access plus 1 month"
-  ExpiresByType image/png                 "access plus 1 month"
-  ExpiresByType video/mp4                 "access plus 1 month"
-  ExpiresByType video/ogg                 "access plus 1 month"
-  ExpiresByType video/webm                "access plus 1 month"
+  ExpiresByType audio/ogg                 "access plus 1 year"
+  ExpiresByType image/gif                 "access plus 1 year"
+  ExpiresByType image/jpeg                "access plus 1 year"
+  ExpiresByType image/png                 "access plus 1 year"
+  ExpiresByType video/mp4                 "access plus 1 year"
+  ExpiresByType video/ogg                 "access plus 1 year"
+  ExpiresByType video/webm                "access plus 1 year"
 
 # HTC files  (css3pie)
   ExpiresByType text/x-component          "access plus 1 month"
 
 # Webfonts
-  ExpiresByType application/vnd.ms-fontobject "access plus 1 month"
-  ExpiresByType application/x-font-ttf    "access plus 1 month"
-  ExpiresByType application/x-font-woff   "access plus 1 month"
-  ExpiresByType font/opentype             "access plus 1 month"
-  ExpiresByType image/svg+xml             "access plus 1 month"
+  ExpiresByType application/vnd.ms-fontobject "access plus 1 year"
+  ExpiresByType application/x-font-ttf    "access plus 1 year"
+  ExpiresByType application/x-font-woff   "access plus 1 year"
+  ExpiresByType font/opentype             "access plus 1 year"
+  ExpiresByType image/svg+xml             "access plus 1 year"
 
 # CSS and JavaScript
   ExpiresByType application/javascript    "access plus 1 year"
@@ -384,6 +389,38 @@ AddDefaultCharset utf-8
 # Force UTF-8 for a number of file formats
 AddCharset utf-8 .atom .css .js .json .rss .vtt .xml
 
+# ----------------------------------------------------------------------
+#  Stateful URLs
+#
+# https://gist.github.com/gustavobeavis/4962250
+# http://www.josscrowcroft.com/2012/code/htaccess-for-html5-history-pushstate-url-routing/
+# ----------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+
+  # Redirect all files and paths to index.html (general rule)
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} !index
+  RewriteRule (.*) index.html [L]
+
+  # Declare path and files where don't apply general rules
+  # # scripts/./../* -  not apply general rule redirect of all folders and files to path "/scripts"
+  RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-d
+  RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-f
+  RewriteRule scripts/(.*)$ scripts/$1 [L,QSA]
+
+  # # images/./../* -  not apply general rule redirect of all folders and files to path "/images"
+  RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-d
+  RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-f
+  RewriteRule images/(.*)$ images/$1 [L,QSA]
+
+  # # styles/./../* -  not apply general rule redirect of all folders and files to path "/styles"
+  RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-d
+  RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-f
+  RewriteRule styles/(.*)$ styles/$1 [L,QSA]
+
+</IfModule>
+
 
 # ----------------------------------------------------------------------
 # A little more security
@@ -391,7 +428,7 @@ AddCharset utf-8 .atom .css .js .json .rss .vtt .xml
 
 # To avoid displaying the exact version number of Apache being used, add the
 # following to httpd.conf (it will not work in .htaccess):
-# ServerTokens Prod
+ServerTokens Prod
 
 # "-Indexes" will have Apache block users from browsing folders without a
 # default document Usually you should leave this activated, because you
