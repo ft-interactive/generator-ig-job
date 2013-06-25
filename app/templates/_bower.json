@@ -6,8 +6,6 @@
     "requirejs": "~2.1.4",<% } %>
     "modernizr": "~2.6.2",
     "jquery": "~1.9.1",
-    "bourbon": "3.1.x",
-    "neat": "1.3.x",
     "bertha-ig-gist": "https://gist.github.com/41bea39ed2001f7ff9b0.git",
     "ig-fill": "https://gist.github.com/baa2d589782ec1eb4afc.git",
     "ig-furniture": "https://gist.github.com/375ebcf89f9aa70c0a1e.git",
