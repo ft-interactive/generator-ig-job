@@ -27,9 +27,6 @@ module.exports = function (grunt) {
     grunt.initConfig({
         yeoman: yeomanConfig,
         watch: {
-            options: {
-                nospawn: true
-            },
             coffee: {
                 files: ['<%%= yeoman.app %>/scripts/{,*/}*.coffee'],
                 tasks: ['coffee:dist']
@@ -40,20 +37,19 @@ module.exports = function (grunt) {
             },
             compass: {
                 files: ['<%%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
-                tasks: ['compass:server'<% if (autoprefixer) { %>, 'autoprefixer' <% } %>]
-            },<% if (autoprefixer) { %>
+                tasks: ['compass:server'<% if (autoprefixer) { %>, 'autoprefixer'<% } %>]
+            },
             styles: {
                 files: ['<%%= yeoman.app %>/styles/{,*/}*.css'],
-                tasks: ['copy:styles', 'autoprefixer']
-            },<% } %>
+                tasks: ['copy:styles'<% if (autoprefixer) { %>, 'autoprefixer'<% } %>]
+            },
             livereload: {
                 options: {
                     livereload: LIVERELOAD_PORT
                 },
                 files: [
-                    '<%%= yeoman.app %>/*.html',<% if (autoprefixer) { %>
-                    '.tmp/styles/{,*/}*.css',<% } else { %>
-                    '{.tmp,<%%= yeoman.app %>}/styles/{,*/}*.css',<% } %>
+                    '<%%= yeoman.app %>/*.html',
+                    '.tmp/styles/{,*/}*.css',
                     '{.tmp,<%%= yeoman.app %>}/scripts/{,*/}*.js',
                     '<%%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
                 ]
@@ -172,7 +168,11 @@ module.exports = function (grunt) {
                 httpFontsPath: '/styles/fonts',
                 relativeAssets: false
             },
-            dist: {},
+            dist: {
+                options: {
+                    generatedImagesDir: '<%%= yeoman.dist %>/images/generated'
+                }
+            },
             server: {
                 options: {
                     debugInfo: true
@@ -268,14 +268,20 @@ module.exports = function (grunt) {
             }
         },
         cssmin: {
-            dist: {
-                files: {
-                    '<%%= yeoman.dist %>/styles/main.css': [
-                        '.tmp/styles/{,*/}*.css',
-                        '<%%= yeoman.app %>/styles/{,*/}*.css'
-                    ]
-                }
-            }
+            // This task is pre-configured if you do not wish to use Usemin
+            // blocks for your CSS. By default, the Usemin block from your
+            // `index.html` will take care of minification, e.g.
+            //
+            //     <!-- build:css({.tmp,app}) styles/main.css -->
+            //
+            // dist: {
+            //     files: {
+            //         '<%%= yeoman.dist %>/styles/main.css': [
+            //             '.tmp/styles/{,*/}*.css',
+            //             '<%%= yeoman.app %>/styles/{,*/}*.css'
+            //         ]
+            //     }
+            // }
         },
         htmlmin: {
             dist: {
@@ -312,37 +318,30 @@ module.exports = function (grunt) {
                         'images/{,*/}*.{webp,gif}',
                         'styles/fonts/*'
                     ]
-                }, {
-                    expand: true,
-                    cwd: '.tmp/images',
-                    dest: '<%%= yeoman.dist %>/images',
-                    src: [
-                        'generated/*'
-                    ]
                 }]
-            }<% if (autoprefixer) { %>,
+            },
             styles: {
                 expand: true,
                 dot: true,
                 cwd: '<%%= yeoman.app %>/styles',
                 dest: '.tmp/styles/',
                 src: '{,*/}*.css'
-            }<% } %>
+            }
         },
         concurrent: {
             server: [
                 'compass',
-                'coffee:dist'<% if (autoprefixer) { %>,
-                'copy:styles'<% } %>
+                'coffee:dist',
+                'copy:styles'
             ],
             test: [
-                'coffee'<% if (autoprefixer) { %>,
-                'copy:styles'<% } %>
+                'coffee',
+                'copy:styles'
             ],
             dist: [
                 'coffee',
-                'compass',<% if (autoprefixer) { %>
-                'copy:styles',<% } %>
+                'compass',
+                'copy:styles',
                 'imagemin',
                 'svgmin',
                 'htmlmin'
@@ -388,8 +387,8 @@ module.exports = function (grunt) {
         'concurrent:dist',<% if (autoprefixer) { %>
         'autoprefixer',<% } %><% if (includeRequireJS) { %>
         'requirejs',<% } %>
-        'cssmin',
         'concat',
+        'cssmin',
         'uglify',
         'copy:dist',
         'rev',
