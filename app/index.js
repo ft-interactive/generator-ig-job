@@ -172,7 +172,7 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
   this.indexFile = this.indexFile.replace('</body>', '\n      <!--#include virtual="/inc/extras-foot-2.html" -->\n    </body>');
 
   // this is the simplest way to include the body classes
-  this.indexFile = this.indexFile.replace('<body>',  '<body class="wide top-border invisible">');
+  this.indexFile = this.indexFile.replace('<body>',  '<body class="invisible">');
 
 };
 
