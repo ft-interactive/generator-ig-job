@@ -331,12 +331,12 @@ module.exports = function (grunt) {
         'sftp-deploy': {
             build: {
                 auth: {
-                    host: 'server.com',
-                    port: 21,
+                    host: 'ftlnx109-lviw-uk-p',
+                    port: 22,
                     authKey: 'local'
                 },
                 src: '<%%= yeoman.dist %>',
-                dest: '/var/opt/customer/app/interactive.ftdata.co.uk/var/www/html/features/b/<%= _.slugify(appname) %>',
+                dest: '/var/opt/customer/apps/interactive.ftdata.co.uk/var/www/html/features/b/<%= _.slugify(appname) %>',
                 exclusions: ['<%%= yeoman.dist %>/**/.DS_Store', '<%%= yeoman.dist %>/**/Thumbs.db','<%%= yeoman.dist %>/**/.git*'],
             }
         },
