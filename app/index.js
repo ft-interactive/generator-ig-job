@@ -201,7 +201,6 @@ AppGenerator.prototype.requirejs = function requirejs() {
 };
 
 AppGenerator.prototype.app = function app() {
-  this.copy('ftppass.json', 'ftppass.json');
   this.mkdir('app');
   this.mkdir('app/scripts');
   this.mkdir('app/styles');

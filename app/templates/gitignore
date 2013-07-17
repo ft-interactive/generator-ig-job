@@ -3,5 +3,4 @@ dist
 .DS_Store
 .tmp
 .sass-cache
-.ftppass
 app/bower_components
