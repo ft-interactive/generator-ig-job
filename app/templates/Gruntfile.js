@@ -328,6 +328,18 @@ module.exports = function (grunt) {
                 src: '{,*/}*.css'
             }
         },
+        'sftp-deploy': {
+            build: {
+                auth: {
+                    host: 'server.com',
+                    port: 21,
+                    authKey: 'local'
+                },
+                src: '<%%= yeoman.dist %>',
+                dest: '/var/opt/customer/app/interactive.ftdata.co.uk/var/www/html/features/b/<%= _.slugify(appname) %>',
+                exclusions: ['<%%= yeoman.dist %>/**/.DS_Store', '<%%= yeoman.dist %>/**/Thumbs.db','<%%= yeoman.dist %>/**/.git*'],
+            }
+        },
         concurrent: {
             server: [
                 'compass',
@@ -399,5 +411,10 @@ module.exports = function (grunt) {
         'jshint',
         'test',
         'build'
+    ]);
+
+    grunt.registerTask('deploy', [
+        'default',
+        'sftp-deploy'
     ]);
 };
