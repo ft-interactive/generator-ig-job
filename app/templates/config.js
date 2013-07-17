@@ -5,7 +5,7 @@ var app = app || {};
 app.spreadsheet = {
 
   // TODO: fill in the spreadsheet ID
-  id: '',
+  id: '<%= spreadsheetId %>',
 
   // Optional Bertha settings
   options: {

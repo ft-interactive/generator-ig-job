@@ -56,6 +56,39 @@ AppGenerator.prototype.askFor = function askFor() {
     }]
   }];
 
+  // Hard coded options
+  this.compassBootstrap = false;
+  this.includeRequireJS = false;
+  this.autoprefixer = true;
+  this.spreadsheetId = null;
+  this.includeBerthaSpreadsheet = false;
+
+  var confirmUsingBerthaSpreadsheet = {
+    type: 'confirm',
+    name: 'includeBerthaSpreadsheet',
+    message: 'Will you be using a Bertha Spreadsheet?'
+  };
+
+  var promptSpreadsheetId = {
+    type: 'input',
+    name: 'spreadsheetId',
+    message: 'If you have a Spreadsheet ID paste it here:'
+  };
+
+  this.prompt([confirmUsingBerthaSpreadsheet], function (answer) {
+    console.log(answer.includeBerthaSpreadsheet);
+
+    if (this.includeBerthaSpreadsheet = !!answer.includeBerthaSpreadsheet) {
+      this.prompt([promptSpreadsheetId], function(answer){
+        this.spreadsheetId = (answer.spreadsheetId || '').replace(/^[\ \'\"']+/, '').replace(/[\ \'\"']+$/, '');
+        cb();
+      }.bind(this));
+    } else {
+      cb();
+    }
+
+  }.bind(this));
+
   // Don't bother to prompt at the moment
   // this.prompt(prompts, function (answers) {
   //   var features = answers.features;
@@ -68,12 +101,6 @@ AppGenerator.prototype.askFor = function askFor() {
 
   //   cb();
   // }.bind(this));
-
-  // Hard coded options
-  this.compassBootstrap = false;
-  this.includeRequireJS = false;
-  this.autoprefixer = true;
-  cb();
 };
 
 AppGenerator.prototype.gruntfile = function gruntfile() {
@@ -210,10 +237,10 @@ AppGenerator.prototype.app = function app() {
   this.mkdir('app/images/content');
   this.write('app/index.html', this.indexFile);
   if (!this.includeRequireJS) {
-
-    this.copy('config.js', 'app/scripts/config.js');
-    this.copy('data.js', 'app/scripts/data.js');
-
-    this.write('app/scripts/main.js', this.mainJsFile);
+    if (this.includeBerthaSpreadsheet) {
+      this.template('config.js', 'app/scripts/config.js');
+      this.template('data.js', 'app/scripts/data.js');
+    }
+    this.template('main.js', 'app/scripts/main.js');
   }
 };
