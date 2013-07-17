@@ -1,14 +1,16 @@
-/*global spreadsheet:true, Furniture:true, getIGSpreadsheet:true */
+/*global app:true, Furniture:true, getIGSpreadsheet:true */
 
 
 (function (window, $) {
 
   'use strict';
 
-  $.holdReady(true);
+  if (app.spreadsheet.id) {
+    $.holdReady(true);
+  }
 
   var processData = function processData(data) {
-    spreadsheet.rawData = data;
+    app.spreadsheet.rawData = data;
     Furniture.setData(data.credits);
   };
 
@@ -22,18 +24,20 @@
     $.holdReady(false);
   };
 
-  spreadsheet.get = function get(successCallback) {
+  app.spreadsheet.get = function get(successCallback) {
 
-    successCallback = successCallback || function(){};
+    if (!this.id) {
+      console.warn('Spreadsheet ID is not defined');
+      return;
+    }
 
     // do the Bertha ajax request
-    spreadsheet.request = getIGSpreadsheet(spreadsheet.id, spreadsheet.options)
+    this.request = getIGSpreadsheet(this.id, this.options)
                                     .done(processData)
-                                    .done(successCallback)
+                                    .done(successCallback || function(){})
                                     .done(unholdReady)
                                     .fail(failLoadingData);
   };
-
 
   $(function () {
     // The body is hidden until all the data has been rendered

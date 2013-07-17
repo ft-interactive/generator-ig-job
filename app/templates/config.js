@@ -1,9 +1,11 @@
-/* exported spreadsheet */
+/* exported app */
 
-var spreadsheet = {
+var app = app || {};
+
+app.spreadsheet = {
 
   // TODO: fill in the spreadsheet ID
-  id: 'SPREADSHEET_KEY',
+  id: '',
 
   // Optional Bertha settings
   options: {

@@ -1,10 +1,10 @@
-/*global spreadsheet:true */
+/*global app:true */
 
 (function (window, $) {
 
   'use strict';
 
-  spreadsheet.get(function (data) {
+  app.spreadsheet.get(function (data) {
     // TODO: process the data
     console.log('data', data);
   });
