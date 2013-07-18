@@ -3,12 +3,12 @@
 (function (window, $) {
 
   'use strict';
-  <% if (includeBerthaSpreadsheet) { %>
+<% if (includeBerthaSpreadsheet) { %>
   app.spreadsheet.get(function (data) {
     // TODO: process the data
     console.log('data', data);
   });
-  <% } %>
+<% } %>
   $(function () {
 
     // TODO: do render implementation

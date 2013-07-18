@@ -76,10 +76,8 @@ AppGenerator.prototype.askFor = function askFor() {
   };
 
   this.prompt([confirmUsingBerthaSpreadsheet], function (answer) {
-    console.log(answer.includeBerthaSpreadsheet);
-
     if (this.includeBerthaSpreadsheet = !!answer.includeBerthaSpreadsheet) {
-      this.prompt([promptSpreadsheetId], function(answer){
+      this.prompt([promptSpreadsheetId], function (answer) {
         this.spreadsheetId = (answer.spreadsheetId || '').replace(/^[\ \'\"']+/, '').replace(/[\ \'\"']+$/, '');
         cb();
       }.bind(this));
