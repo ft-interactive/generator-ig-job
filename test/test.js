@@ -5,14 +5,14 @@ var helpers = require('yeoman-generator').test;
 var assert  = require('assert');
 
 
-describe('Webapp generator test', function () {
+describe('IG Job generator test', function () {
   beforeEach(function (done) {
     helpers.testDirectory(path.join(__dirname, 'temp'), function (err) {
       if (err) {
         return done(err);
       }
 
-      this.webapp = helpers.createGenerator('webapp:app', [
+      this.webapp = helpers.createGenerator('ig-job:app', [
         '../../app', [
           helpers.createDummyGenerator(),
           'mocha:app'
@@ -32,11 +32,7 @@ describe('Webapp generator test', function () {
       ['bower.json', /"name": "temp"/],
       ['package.json', /"name": "temp"/],
       'Gruntfile.js',
-      'app/404.html',
-      'app/favicon.ico',
-      'app/robots.txt',
       'app/index.html',
-      'app/scripts/hello.coffee',
       'app/scripts/main.js',
       'app/styles/main.scss'
     ];
@@ -52,27 +48,4 @@ describe('Webapp generator test', function () {
     });
   });
 
-  it('creates expected files in AMD mode', function (done) {
-    var expected= [
-      ['bower.json', /"name": "temp"/],
-      ['package.json', /"name": "temp"/],
-      'Gruntfile.js',
-      'app/404.html',
-      'app/favicon.ico',
-      'app/robots.txt',
-      'app/index.html',
-      ['app/scripts/main.js', /require\.config/],
-      'app/styles/main.scss'
-    ];
-
-    helpers.mockPrompt(this.webapp, {
-      features: ['compassBootstrap', 'includeRequireJS']
-    });
-
-    this.webapp.options['skip-install'] = true;
-    this.webapp.run({}, function () {
-      helpers.assertFiles(expected);
-      done();
-    });
-  });
 });
