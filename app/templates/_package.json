@@ -22,7 +22,7 @@
     "grunt-contrib-jasmine": "~0.4.2",<% } %>
     "grunt-rev": "~0.1.0",<% if (autoprefixer) { %>
     "grunt-autoprefixer": "~0.1.20130516",<% } %>
-    "grunt-usemin": "~0.1.10",<% if (testFramework === 'mocha') {  %>
+    "grunt-usemin": "~0.1.12",<% if (testFramework === 'mocha') {  %>
     "grunt-mocha": "~0.3.0",<% } %>
     "grunt-open": "~0.2.0",
     "grunt-svgmin": "~0.1.0",
