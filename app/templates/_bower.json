@@ -5,6 +5,7 @@
     "sass-bootstrap": "~2.3.0",<% } %><% if (includeRequireJS) { %>
     "requirejs": "~2.1.4",<% } %>
     "modernizr": "~2.6.2",
+    "html5shiv": "~3.6.2",
     "jquery": "~1.9.1",<% if (includeBerthaSpreadsheet) { %>
     "bertha-ig-gist": "https://gist.github.com/41bea39ed2001f7ff9b0.git",<% } %>
     "ig-fill": "https://gist.github.com/baa2d589782ec1eb4afc.git",
