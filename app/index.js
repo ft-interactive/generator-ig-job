@@ -66,13 +66,14 @@ AppGenerator.prototype.askFor = function askFor() {
   var confirmUsingBerthaSpreadsheet = {
     type: 'confirm',
     name: 'includeBerthaSpreadsheet',
-    message: 'Will you be using a Bertha Spreadsheet?'
+    message: 'Will you be using a Bertha Spreadsheet?',
+    default: true
   };
 
   var promptSpreadsheetId = {
     type: 'input',
     name: 'spreadsheetId',
-    message: 'If you have a Spreadsheet ID paste it here:'
+    message: 'If you have a Spreadsheet ID paste it here. If you don\'t then skip this step:'
   };
 
   this.prompt([confirmUsingBerthaSpreadsheet], function (answer) {
@@ -159,7 +160,7 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
   var contentText = [];
 
   if (!this.includeRequireJS) {
-    this.indexFile = this.appendScripts(this.indexFile, 'scripts/main.js', [
+    this.indexFile = this.appendFiles(this.indexFile, 'js', 'scripts/main.js', [
       'bower_components/jquery/jquery.js',
       'bower_components/ig-fill/fill.js',
       'bower_components/ig-furniture/furniture.js',
@@ -167,12 +168,12 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
       'scripts/config.js',
       'scripts/data.js',
       'scripts/main.js'
-    ]);
+    ], null, ['.tmp', 'app']);
   }
 
   if (this.compassBootstrap && !this.includeRequireJS) {
     // wire Twitter Bootstrap plugins
-    this.indexFile = this.appendScripts(this.indexFile, 'scripts/plugins.js', [
+    this.indexFile = this.appendFiles(this.indexFile, 'js', 'scripts/plugins.js', [
       'bower_components/sass-bootstrap/js/bootstrap-affix.js',
       'bower_components/sass-bootstrap/js/bootstrap-alert.js',
       'bower_components/sass-bootstrap/js/bootstrap-dropdown.js',
@@ -186,7 +187,7 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
       'bower_components/sass-bootstrap/js/bootstrap-scrollspy.js',
       'bower_components/sass-bootstrap/js/bootstrap-collapse.js',
       'bower_components/sass-bootstrap/js/bootstrap-tab.js'
-    ]);
+    ], null, []);
   }
 
   if (!this.includeRequireJS) {
@@ -194,8 +195,8 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
   }
 
   // insert body Apache SSI tags
-  this.indexFile = this.indexFile.replace('<body>', '<body>\n      <!--#include virtual="/inc/fallback.html" -->\n      <!--#include virtual="/inc/extras-foot-1.html" -->\n');
-  this.indexFile = this.indexFile.replace('</body>', '\n      <!--#include virtual="/inc/extras-foot-2.html" -->\n    </body>');
+  this.indexFile = this.indexFile.replace('<body>', '<body>\n        <!--#include virtual="/inc/fallback.html" -->\n        <!--#include virtual="/inc/extras-foot-1.html" -->\n');
+  this.indexFile = this.indexFile.replace('</body>', '\n        <!--#include virtual="/inc/extras-foot-2.html" -->\n    </body>');
 
   // this is the simplest way to include the body classes
   this.indexFile = this.indexFile.replace('<body>',  '<body class="invisible">');
