@@ -42,7 +42,11 @@ module.exports = function (grunt) {
             styles: {
                 files: ['<%%= yeoman.app %>/styles/{,*/}*.css'],
                 tasks: ['copy:styles'<% if (autoprefixer) { %>, 'autoprefixer'<% } %>]
-            },
+            },<% if (includeHandlebars) { %>
+            templates: {
+                files: ['<%%= yeoman.app %>/templates/{,*/}*.hbs'],
+                tasks: ['templates']
+            },<% } %>
             livereload: {
                 options: {
                     livereload: LIVERELOAD_PORT
@@ -191,12 +195,16 @@ module.exports = function (grunt) {
                     dest: '.tmp/styles/'
                 }]
             }
-        },<% } %>
-        // not used since Uglify task does concat,
-        // but still available if needed
-        /*concat: {
-            dist: {}
-        },*/<% if (includeRequireJS) { %>
+        },<% } %><% if (includeHandlebars) { %>
+        concat: {
+            handlebars: {
+                src: [
+                    'node_modules/grunt-contrib-handlebars/node_modules/handlebars/dist/handlebars.runtime.js',
+                    '.tmp/jst/{,*/}*.js'
+                ],
+                dest: '.tmp/scripts/templates.js'
+            }
+        },<% } %><% if (includeRequireJS) { %>
         requirejs: {
             dist: {
                 // Options: https://github.com/jrburke/r.js/blob/master/build/example.build.js
@@ -327,7 +335,34 @@ module.exports = function (grunt) {
                 dest: '.tmp/styles/',
                 src: '{,*/}*.css'
             }
-        },
+        },<% if (includeHandlebars) { %>
+        handlebars: {
+            dist: {
+                files: {
+                    '.tmp/jst/handlebars.js': ['<%%= yeoman.app %>/templates/{,*/}*.hbs']
+                },
+                options: {
+                    namespace: 'JST',
+                    partialsUseNamespace: true,
+                    processContent: function(content) {
+                        content = content.replace(/^[\x20\t]+/mg, '').replace(/[\x20\t]+$/mg, '');
+                        content = content.replace(/^[\r\n]+/, '').replace(/[\r\n]*$/, '');
+                        return content;
+                    },
+                    processAST: function(ast) {
+                        return ast;
+                    },
+                    processName: function(filePath) {
+                        var pieces = filePath.split("/");
+                        return pieces[pieces.length - 1].replace(/\..*$/, '').replace(/\ /g, '_');
+                    },
+                    processPartialName: function(filePath) {
+                        var pieces = filePath.split("/");
+                        return pieces[pieces.length - 1].replace(/\..*$/, '').replace(/\ /g, '_').replace(/^_+/, '');
+                    }
+                }
+            }
+        },<% } %>
         'sftp-deploy': {
             build: {
                 auth: {
@@ -342,15 +377,18 @@ module.exports = function (grunt) {
         },
         concurrent: {
             server: [
+                <% if (includeHandlebars) { %>'templates',<% } %>
                 'compass',
                 'coffee:dist',
                 'copy:styles'
             ],
             test: [
+                <% if (includeHandlebars) { %>'templates',<% } %>
                 'coffee',
                 'copy:styles'
             ],
             dist: [
+                <% if (includeHandlebars) { %>'templates',<% } %>
                 'coffee',
                 'compass',
                 'copy:styles',
@@ -383,6 +421,11 @@ module.exports = function (grunt) {
             'watch'
         ]);
     });
+
+    <% if (includeHandlebars) { %>grunt.registerTask('templates', [
+        'handlebars',
+        'concat:handlebars'
+    ]);<% } %>
 
     grunt.registerTask('test', [
         'clean:server',

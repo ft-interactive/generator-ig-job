@@ -62,6 +62,7 @@ AppGenerator.prototype.askFor = function askFor() {
   this.autoprefixer = true;
   this.spreadsheetId = null;
   this.includeBerthaSpreadsheet = false;
+  this.includeHandlebars = false;
 
   var confirmUsingBerthaSpreadsheet = {
     type: 'confirm',
@@ -76,14 +77,28 @@ AppGenerator.prototype.askFor = function askFor() {
     message: 'If you have a Spreadsheet ID paste it here. If you don\'t then skip this step:'
   };
 
+  var promptHandlebars = {
+    type: 'confirm',
+    name: 'includeHandlebars',
+    message: 'Include Handlebars templates?',
+    default: true
+  };
+
+  function doHandlebarsPrompt() {
+    this.prompt([promptHandlebars], function (answer) {
+      this.includeHandlebars = !!answer.includeHandlebars;
+      cb();
+    }.bind(this));
+  }
+
   this.prompt([confirmUsingBerthaSpreadsheet], function (answer) {
     if (this.includeBerthaSpreadsheet = !!answer.includeBerthaSpreadsheet) {
       this.prompt([promptSpreadsheetId], function (answer) {
         this.spreadsheetId = (answer.spreadsheetId || '').replace(/^[\ \'\"']+/, '').replace(/[\ \'\"']+$/, '');
-        cb();
+        doHandlebarsPrompt.call(this);
       }.bind(this));
     } else {
-      cb();
+      doHandlebarsPrompt.call(this);
     }
 
   }.bind(this));
@@ -160,16 +175,34 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
   var defaults = [];
   var contentText = [];
 
-  if (!this.includeRequireJS) {
-    this.indexFile = this.appendFiles(this.indexFile, 'js', 'scripts/main.js', [
-      'bower_components/jquery/jquery.js',
-      'bower_components/ig-fill/fill.js',
-      'bower_components/ig-furniture/furniture.js',
-      'bower_components/bertha-ig-gist/request.js',
+  var bowerComponentScripts = [
+    'bower_components/jquery/jquery.js',
+    'bower_components/ig-fill/fill.js',
+    'bower_components/ig-furniture/furniture.js',
+    'bower_components/bertha-ig-gist/request.js'
+  ];
+
+  var templateScripts = [
+    'scripts/templates.js',
+    'scripts/handlebars-helpers.js'
+  ];
+  
+  var projectScripts = [
       'scripts/config.js',
       'scripts/data.js',
       'scripts/main.js'
-    ], null, ['.tmp', 'app']);
+  ];
+
+  var scriptList;
+
+  if (this.includeHandlebars) {
+    scriptList = bowerComponentScripts.concat(templateScripts, projectScripts);
+  } else {
+    scriptList = bowerComponentScripts.concat(projectScripts);
+  }
+
+  if (!this.includeRequireJS) {
+    this.indexFile = this.appendFiles(this.indexFile, 'js', 'scripts/main.js', scriptList, null, ['.tmp', 'app']);
   }
 
   if (this.compassBootstrap && !this.includeRequireJS) {
@@ -229,6 +262,14 @@ AppGenerator.prototype.requirejs = function requirejs() {
 AppGenerator.prototype.app = function app() {
   this.copy('ftppass', '.ftppass');
   this.mkdir('app');
+
+  if (this.includeHandlebars) {
+    this.mkdir('app/templates');
+    this.copy('example_template.hbs', 'app/templates/example_template.hbs');
+    this.copy('example_partial.hbs', 'app/templates/_example_partial.hbs');
+    this.copy('handlebars-helpers.js', 'app/scripts/handlebars-helpers.js');
+  }
+
   this.mkdir('app/scripts');
   this.mkdir('app/styles');
   this.mkdir('app/styles/fonts');
