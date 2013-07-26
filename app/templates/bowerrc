@@ -1,0 +1,5 @@
+{
+  "directory": "app/bower_components",
+  "endpoint"   : "http://ig-bower.herokuapp.com",
+  "searchpath" : ["https://bower.herokuapp.com"]
+}
