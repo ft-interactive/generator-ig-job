@@ -353,11 +353,11 @@ module.exports = function (grunt) {
                         return ast;
                     },
                     processName: function(filePath) {
-                        var pieces = filePath.split("/");
+                        var pieces = filePath.split('/');
                         return pieces[pieces.length - 1].replace(/\..*$/, '').replace(/\ /g, '_');
                     },
                     processPartialName: function(filePath) {
-                        var pieces = filePath.split("/");
+                        var pieces = filePath.split('/');
                         return pieces[pieces.length - 1].replace(/\..*$/, '').replace(/\ /g, '_').replace(/^_+/, '');
                     }
                 }
