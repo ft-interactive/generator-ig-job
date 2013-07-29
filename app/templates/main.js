@@ -21,13 +21,13 @@
         title: 'Article One',
         subtitle: 'Subtitle one',
         body: 'paragraph one\nparagraph two\n\nparagraph three',
-        image: { filename: 'images/content/image1.png' }
+        image: { filename: 'image1.png' }
       },
       {
         title: 'Article Two',
         subtitle: 'Subtitle 2',
         body: 'paragraph one',
-        image: { filename: 'images/content/image2.png' }
+        image: { filename: 'image2.png' }
       }
     ];
 
