@@ -7,6 +7,7 @@
   app.spreadsheet.get(function (data) {
     // TODO: process the data
     console.log('data', data);
+    <% if (includeHandlebars) { %>Handlebars.createOptionsHelper(data.options);<% } %>
   });
 <% } %>
   $(function () {
