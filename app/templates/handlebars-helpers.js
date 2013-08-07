@@ -1,3 +1,6 @@
+/*global Handlebars:true  */
+'use strict';
+
 /*
 
 Example helper for turning strings and
@@ -37,7 +40,7 @@ Handlebars.createGlobalHelper = function(name, hash, commands) {
 };
 
 Handlebars.createOptionsHelper = function(options, commands) {
-  var isAbsURL = /^(https?:\/\//;
+  var isAbsURL = /^http(s)?:\/\//;
   var o = {
     'image.baseURL': function(baseURL, filename) {
       baseURL = baseURL || 'images/content';
