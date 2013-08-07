@@ -1,4 +1,6 @@
-<% if (includeBerthaSpreadsheet || includeHandlebars) { %>/*global<% if (includeBerthaSpreadsheet) { %> app:true<% } if (includeHandlebars) { %> JST:true<% } %> */<% } %>
+<% if (includeBerthaSpreadsheet) { %>/*global app:true */<% } %>
+<% if (includeHandlebars) { %>/*global JST:true */ <%} %>
+<% if (includeHandlebars) { %>/*global Handlebars:true */ <%} %>
 
 (function (window, $) {
 
