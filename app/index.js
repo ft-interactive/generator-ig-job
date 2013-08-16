@@ -89,7 +89,7 @@ AppGenerator.prototype.askFor = function askFor() {
   var promptSpreadsheetId = {
     type: 'input',
     name: 'spreadsheetId',
-    message: 'If you have a Spreadsheet ID paste it here. If you don\'t then skip this step:'
+    message: 'If you have a Spreadsheet ID or URL paste it here. If you don\'t then skip this step:'
   };
 
   var promptHandlebars = {
@@ -109,7 +109,11 @@ AppGenerator.prototype.askFor = function askFor() {
   this.prompt([confirmUsingBerthaSpreadsheet], function (answer) {
     if (this.includeBerthaSpreadsheet = !!answer.includeBerthaSpreadsheet) {
       this.prompt([promptSpreadsheetId], function (answer) {
-        this.spreadsheetId = (answer.spreadsheetId || '').replace(/^[\ \'\"']+/, '').replace(/[\ \'\"']+$/, '');
+        var id = (answer.spreadsheetId || '').replace(/^[\ \'\"']+/, '').replace(/[\ \'\"']+$/, '');
+        if (id.substring(0,8) === 'https://') {
+            id = require('url').parse(id, true).query.key;
+        }
+        this.spreadsheetId = id;
         doHandlebarsPrompt.call(this);
       }.bind(this));
     } else {
