@@ -29,7 +29,7 @@ var AppGenerator = module.exports = function Appgenerator(args, options, config)
         'You might need to install some of the libraries listed below.\n',
         'For example, to download and install "lodash" and "backbone" run the following command:\n\n',
         '      $ bower install -S lodash backbone\n\n',
-        '  * lowdash   : A utility library for consistency, customization, performance, and extra features.',
+        '  * lodash   : A utility library for consistency, customization, performance, and extra features.',
         '  * backbone  : Give your JS App some Backbone with Models, Views, Collections, and Events (requires lodash)',
         '  * isotope   : An exquisite jQuery plugin for magical layouts. Enables filtering, sorting, and dynamic layouts.',
         '  * d3        : A JavaScript visualization library for HTML and SVG',
@@ -37,8 +37,11 @@ var AppGenerator = module.exports = function Appgenerator(args, options, config)
         '...to find more libs run:\n',
         '      $ bower search\n\n'
       ];
+      if (this.spreadsheetId) {
+        msg.push('Bertha republish URL: http://bertha.ig.ft.com/republish/publish/ig/' + this.spreadsheetId + '\n\n');
+      }
       console.log(msg.join('\n   '));
-    }});
+    }.bind(this)});
   });
 
   this.yeoman = this.readFileAsString(path.join(__dirname, 'BANNER'));
@@ -89,7 +92,7 @@ AppGenerator.prototype.askFor = function askFor() {
   var promptSpreadsheetId = {
     type: 'input',
     name: 'spreadsheetId',
-    message: 'If you have a Spreadsheet ID paste it here. If you don\'t then skip this step:'
+    message: 'If you have a Google Spreadsheet URL or ID paste it here. If you don\'t then skip this step:'
   };
 
   var promptHandlebars = {
@@ -106,12 +109,27 @@ AppGenerator.prototype.askFor = function askFor() {
     }.bind(this));
   }
 
+
   this.prompt([confirmUsingBerthaSpreadsheet], function (answer) {
     if (this.includeBerthaSpreadsheet = !!answer.includeBerthaSpreadsheet) {
-      this.prompt([promptSpreadsheetId], function (answer) {
-        this.spreadsheetId = (answer.spreadsheetId || '').replace(/^[\ \'\"']+/, '').replace(/[\ \'\"']+$/, '');
-        doHandlebarsPrompt.call(this);
-      }.bind(this));
+      (function doSpreadsheetIdPrompt() {
+        this.prompt([promptSpreadsheetId], function (answer) {
+          var id = (answer.spreadsheetId || '').replace(/^[\ \'\"']+/, '').replace(/[\ \'\"']+$/, '');
+          if (id.substring(0,8) === 'https://') {
+            var spreadsheetUrl = require('url').parse(id, true);
+            if (spreadsheetUrl.host === 'docs.google.com' && spreadsheetUrl.query.key) {
+              id = spreadsheetUrl.query.key;
+            }
+            else {
+              this.log('\u001b[31m' + 'Error: Please enter a valid Google Spreadsheet URL (or just a spreadsheet ID).' + '\u001b[0m');
+              doSpreadsheetIdPrompt.call(this);
+              return;
+            }
+          }
+          this.spreadsheetId = id;
+          doHandlebarsPrompt.call(this);
+        }.bind(this));
+      }).call(this);
     } else {
       doHandlebarsPrompt.call(this);
     }
@@ -201,7 +219,7 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
     'scripts/templates.js',
     'scripts/handlebars-helpers.js'
   ];
-  
+
   var projectScripts = [
       'scripts/config.js',
       'scripts/data.js',
