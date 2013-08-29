@@ -2,6 +2,10 @@
 
 var app = app || {};
 
+app.config = {
+    container: '#main-content'
+};
+
 app.spreadsheet = {
 <% if (!spreadsheetId) { %>
   // TODO: insert Bertha Spreadsheet ID here
