@@ -29,7 +29,7 @@ var AppGenerator = module.exports = function Appgenerator(args, options, config)
         'You might need to install some of the libraries listed below.\n',
         'For example, to download and install "lodash" and "backbone" run the following command:\n\n',
         '      $ bower install -S lodash backbone\n\n',
-        '  * lowdash   : A utility library for consistency, customization, performance, and extra features.',
+        '  * lodash   : A utility library for consistency, customization, performance, and extra features.',
         '  * backbone  : Give your JS App some Backbone with Models, Views, Collections, and Events (requires lodash)',
         '  * isotope   : An exquisite jQuery plugin for magical layouts. Enables filtering, sorting, and dynamic layouts.',
         '  * d3        : A JavaScript visualization library for HTML and SVG',
