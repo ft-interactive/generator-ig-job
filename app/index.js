@@ -37,8 +37,11 @@ var AppGenerator = module.exports = function Appgenerator(args, options, config)
         '...to find more libs run:\n',
         '      $ bower search\n\n'
       ];
+      if (this.spreadsheetId) {
+        msg.push('Bertha republish URL: http://bertha.ig.ft.com/republish/publish/ig/' + this.spreadsheetId + '\n\n');
+      }
       console.log(msg.join('\n   '));
-    }});
+    }.bind(this)});
   });
 
   this.yeoman = this.readFileAsString(path.join(__dirname, 'BANNER'));
