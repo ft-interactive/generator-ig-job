@@ -298,8 +298,6 @@ AppGenerator.prototype.app = function app() {
 
   if (this.includeHandlebars) {
     this.mkdir('app/templates');
-    this.copy('example_template.hbs', 'app/templates/example_template.hbs');
-    this.copy('example_partial.hbs', 'app/templates/_example_partial.hbs');
     this.copy('handlebars-helpers.js', 'app/scripts/handlebars-helpers.js');
   }
 
