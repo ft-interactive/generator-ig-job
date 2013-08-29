@@ -89,7 +89,7 @@ AppGenerator.prototype.askFor = function askFor() {
   var promptSpreadsheetId = {
     type: 'input',
     name: 'spreadsheetId',
-    message: 'If you have a Spreadsheet ID or URL paste it here. If you don\'t then skip this step:'
+    message: 'If you have a Google Spreadsheet URL or ID paste it here. If you don\'t then skip this step:'
   };
 
   var promptHandlebars = {
@@ -106,16 +106,27 @@ AppGenerator.prototype.askFor = function askFor() {
     }.bind(this));
   }
 
+
   this.prompt([confirmUsingBerthaSpreadsheet], function (answer) {
     if (this.includeBerthaSpreadsheet = !!answer.includeBerthaSpreadsheet) {
-      this.prompt([promptSpreadsheetId], function (answer) {
-        var id = (answer.spreadsheetId || '').replace(/^[\ \'\"']+/, '').replace(/[\ \'\"']+$/, '');
-        if (id.substring(0,8) === 'https://') {
-            id = require('url').parse(id, true).query.key;
-        }
-        this.spreadsheetId = id;
-        doHandlebarsPrompt.call(this);
-      }.bind(this));
+      (function doSpreadsheetIdPrompt() {
+        this.prompt([promptSpreadsheetId], function (answer) {
+          var id = (answer.spreadsheetId || '').replace(/^[\ \'\"']+/, '').replace(/[\ \'\"']+$/, '');
+          if (id.substring(0,8) === 'https://') {
+            var spreadsheetUrl = require('url').parse(id, true);
+            if (spreadsheetUrl.host === 'docs.google.com' && spreadsheetUrl.query.key) {
+              id = spreadsheetUrl.query.key;
+            }
+            else {
+              this.log('\u001b[31m' + 'Error: Please enter a valid Google Spreadsheet URL (or just a spreadsheet ID).' + '\u001b[0m');
+              doSpreadsheetIdPrompt.call(this);
+              return;
+            }
+          }
+          this.spreadsheetId = id;
+          doHandlebarsPrompt.call(this);
+        }.bind(this));
+      }).call(this);
     } else {
       doHandlebarsPrompt.call(this);
     }
@@ -205,7 +216,7 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
     'scripts/templates.js',
     'scripts/handlebars-helpers.js'
   ];
-  
+
   var projectScripts = [
       'scripts/config.js',
       'scripts/data.js',
