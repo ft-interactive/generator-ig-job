@@ -13,9 +13,7 @@
   });
 <% } %>
   $(function () {
-<% if (includeHandlebars) { %>
     // TODO: implement code for rendering the data model
-<% } %>
   });
 
 }(this, jQuery));
