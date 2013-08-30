@@ -3,7 +3,7 @@
 var app = app || {};
 
 app.config = {
-    container: '#main-content'
+  container: '#main-content'
 };
 
 app.spreadsheet = {
@@ -40,7 +40,11 @@ app.spreadsheet = {
     * Host
     *
     * To override the Bertha server that the
-    * data is coming from
+    * data is coming from. This could be:
+    *    - bertha.ig.ft.com               :  Production server via Akamai [best option] (default)
+    *    - spottiswood.herokuapp.com      :  Production server origin hostname
+    *    - staging.bertha.ig.ft.com       :  Staging server via Akamai
+    *    - spottiswood-tupp.herokuapp.com :  Staging server origin hostname
     */
     // host: '',
 
@@ -53,7 +57,10 @@ app.spreadsheet = {
     // plugin: '',
 
     /*
-    * An array of custom sheets
+    * An array of custom sheets.
+    * Sheet names beginning with '+' are optional.
+    *    For example "optionalsheet" will not cause an error if it's missing.
+    *    ['mandatorysheet', '+optionalsheet']
     */
     // sheets: []
   }
