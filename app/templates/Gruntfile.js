@@ -375,6 +375,16 @@ module.exports = function (grunt) {
                 exclusions: ['<%%= yeoman.dist %>/**/.DS_Store', '<%%= yeoman.dist %>/**/Thumbs.db','<%%= yeoman.dist %>/**/.git*'],
             }
         },
+        embed: {
+            options: {
+                threshold: '7KB'
+            },
+            dist: {
+                files: {
+                    '<%= yeoman.dist %>/index.html': '<%= yeoman.dist %>/index.html'
+                }
+            }
+        },
         concurrent: {
             server: [
                 <% if (includeHandlebars) { %>'templates',<% } %>
@@ -447,7 +457,8 @@ module.exports = function (grunt) {
         'uglify',
         'copy:dist',
         'rev',
-        'usemin'
+        'usemin',
+        'embed:dist'
     ]);
 
     grunt.registerTask('default', [
