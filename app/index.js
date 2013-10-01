@@ -196,7 +196,7 @@ AppGenerator.prototype.bootstrapJs = function bootstrapJs() {
 
 AppGenerator.prototype.mainStylesheet = function mainStylesheet() {
   if (this.compassBootstrap) {
-    this.copy('boostrap.scss', 'app/styles/main.scss');
+    this.copy('bootstrap.scss', 'app/styles/main.scss');
   } else {
     this.copy('_var.scss', 'app/styles/_var.scss');
     this.copy('plain.scss', 'app/styles/main.scss');
