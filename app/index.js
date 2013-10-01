@@ -246,8 +246,7 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
     this.mainJsFile = this.readFileAsString(path.join(this.sourceRoot(), 'main.js'));
   }
 
-  // insert body Apache SSI tags
-  this.indexFile = this.indexFile.replace('<body>', '<body>\n        <!--#include virtual="/inc/fallback.html" -->\n        <!--#include virtual="/inc/extras-foot-1.html" -->\n');
+  // insert last Apache SSI tag after scripts
   this.indexFile = this.indexFile.replace('</body>', '\n        <!--#include virtual="/inc/extras-foot-2.html" -->\n    </body>');
 
   var bodyClasses = [];
