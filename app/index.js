@@ -302,6 +302,7 @@ AppGenerator.prototype.requirejs = function requirejs() {
 
 AppGenerator.prototype.app = function app() {
   this.copy('ftppass', '.ftppass');
+  this.copy('es5-shim.js', 'app/scripts/vendor/es5-shim.js');
   this.mkdir('app');
 
   if (this.includeHandlebars) {
