@@ -23,7 +23,8 @@
     "yo": ">=1.0.0-rc.1.2"
   },
   "devDependencies": {
-    "mocha": "~1.9.0"
+    "mocha": "~1.9.0",
+    "misc-ftinteractive-helpers": "git+https://github.com/callumlocke/misc-ftinteractive-helpers.git"
   },
   "engines": {
     "node": ">=0.8.0",

@@ -7,6 +7,9 @@ var lrSnippet = require('connect-livereload')({port: LIVERELOAD_PORT});
 var mountFolder = function (connect, dir) {
     return connect.static(require('path').resolve(dir));
 };
+<% if (includeModernizr) { %>
+var modernizrConf = require('./modernizr.json');
+<% } %>
 
 // # Globbing
 // for performance reasons we're only matching one level down:
@@ -375,7 +378,15 @@ module.exports = function (grunt) {
                 dest: '/var/opt/customer/apps/interactive.ftdata.co.uk/var/www/html/features/b/<%= _.slugify(appname) %>',
                 exclusions: ['<%%= yeoman.dist %>/**/.DS_Store', '<%%= yeoman.dist %>/**/Thumbs.db','<%%= yeoman.dist %>/**/.git*'],
             }
-        },
+        },<% if (includeModernizr) { %>
+        modernizr: {
+            parseFiles: false,
+            outputFile: '.tmp/scripts/vendor/modernizr.js',
+            uglify: false,
+            extra: modernizrConf.extra,
+            extensibility : modernizrConf.extensibility,
+            tests: modernizrConf.tests,
+        },<% } %>
         embed: {
             options: {
                 threshold: '7KB'
@@ -388,7 +399,8 @@ module.exports = function (grunt) {
         },
         concurrent: {
             server: [
-                <% if (includeHandlebars) { %>'templates',<% } %>
+                <% if (includeHandlebars) { %>'templates',<% } %><% if (includeModernizr) { %>
+                'modernizr',<% } %>
                 'compass',
                 'coffee:dist',
                 'copy:styles'
@@ -399,7 +411,8 @@ module.exports = function (grunt) {
                 'copy:styles'
             ],
             dist: [
-                <% if (includeHandlebars) { %>'templates',<% } %>
+                <% if (includeHandlebars) { %>'templates',<% } %><% if (includeModernizr) { %>
+                'modernizr',<% } %>
                 'coffee',
                 'compass',
                 'copy:styles',
