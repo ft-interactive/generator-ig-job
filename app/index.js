@@ -255,11 +255,9 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
     // this is the simplest way to include the body classes
     bodyClasses.push('invisible');
   }
-
   if (bodyClasses.length) {
     this.indexFile = this.indexFile.replace('<body>',  '<body class="' + bodyClasses.join(' ') + '">');
   }
-
 };
 
 // TODO(mklabs): to be put in a subgenerator like rjs:app
