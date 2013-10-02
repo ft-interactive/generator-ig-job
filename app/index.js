@@ -3,7 +3,7 @@ var util = require('util');
 var path = require('path');
 var spawn = require('child_process').spawn;
 var yeoman = require('yeoman-generator');
-var parseSpreadsheetKey = require('misc-ftinteractive-helpers').parseSpreadsheetKey;
+var parseSpreadsheetKey = require('parse-spreadsheet-key');
 
 var AppGenerator = module.exports = function Appgenerator(args, options, config) {
   yeoman.generators.Base.apply(this, arguments);

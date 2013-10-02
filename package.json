@@ -16,15 +16,15 @@
   },
   "dependencies": {
     "yeoman-generator": "~0.13.1",
-    "cheerio": "~0.10.8"
+    "cheerio": "~0.10.8",
+    "parse-spreadsheet-key": "git+https://gist.github.com/6792647.git"
   },
   "peerDependencies": {
     "generator-mocha": "~0.1.1",
     "yo": ">=1.0.0-rc.1.2"
   },
   "devDependencies": {
-    "mocha": "~1.9.0",
-    "misc-ftinteractive-helpers": "git+https://github.com/callumlocke/misc-ftinteractive-helpers.git"
+    "mocha": "~1.9.0"
   },
   "engines": {
     "node": ">=0.8.0",
