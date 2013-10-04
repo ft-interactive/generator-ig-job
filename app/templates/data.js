@@ -11,7 +11,10 @@
 
   var processData = function processData(data) {
     app.spreadsheet.rawData = data;
-    Furniture.setData(data.credits);
+    Furniture.setCredits(data.credits);
+    if (data.options && data.options.footnotes) {
+      Furniture.setFootnotes(data.options.footnotes);
+    }
   };
 
   // in case the Bertha request fails
