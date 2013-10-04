@@ -16,7 +16,8 @@
   },
   "dependencies": {
     "yeoman-generator": "~0.13.1",
-    "cheerio": "~0.10.8"
+    "cheerio": "~0.10.8",
+    "parse-spreadsheet-key": "git+https://gist.github.com/6792647.git"
   },
   "peerDependencies": {
     "generator-mocha": "~0.1.1",
