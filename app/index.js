@@ -58,30 +58,25 @@ AppGenerator.prototype.askFor = function askFor() {
   var promptFeatures = [{
     type: 'checkbox',
     name: 'features',
-    message: 'Which features would you like? (Press UP/DOWN and SPACE to edit, then press ENTER to continue.)',
+    message: 'Which features would you like? (Press UP/DOWN and SPACE to select/deselect an option, then press ENTER to continue.)',
     choices: [{
-      name: 'Twitter Bootstrap for Sass',
-      value: 'compassBootstrap',
-      checked: true
-    }, {
-      name: 'RequireJS',
-      value: 'requireJS',
-      checked: false
-    }, {
-      name: 'Autoprefixer for your CSS',
-      value: 'autoprefixer',
-      checked: true
-    }, {
-      name: 'Modernizr',
-      value: 'modernizr',
-      checked: true
-    }, {
       name: 'Bertha spreadsheet',
       value: 'bertha',
       checked: true
-    }, {
+    },
+    {
+      name: 'Modernizr',
+      value: 'modernizr',
+      checked: true
+    },
+    {
       name: 'Handlebars templates',
       value: 'handlebars',
+      checked: true
+    },
+    {
+      name: 'Autoprefixer for your CSS',
+      value: 'autoprefixer',
       checked: true
     }]
   }];
