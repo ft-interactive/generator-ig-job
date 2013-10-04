@@ -3,7 +3,7 @@ var util = require('util');
 var path = require('path');
 var spawn = require('child_process').spawn;
 var yeoman = require('yeoman-generator');
-
+var parseSpreadsheetKey = require('parse-spreadsheet-key');
 
 var AppGenerator = module.exports = function Appgenerator(args, options, config) {
   yeoman.generators.Base.apply(this, arguments);
@@ -44,7 +44,7 @@ var AppGenerator = module.exports = function Appgenerator(args, options, config)
     }.bind(this)});
   });
 
-  this.yeoman = this.readFileAsString(path.join(__dirname, 'BANNER'));
+  this.banner = this.readFileAsString(path.join(__dirname, 'BANNER'));
 
   this.pkg = JSON.parse(this.readFileAsString(path.join(__dirname, '../package.json')));
 };
@@ -53,41 +53,38 @@ util.inherits(AppGenerator, yeoman.generators.Base);
 
 AppGenerator.prototype.askFor = function askFor() {
   var cb = this.async();
-  console.log(this.yeoman);
+  console.log(this.banner);
 
-  var prompts = [{
+  var promptFeatures = [{
     type: 'checkbox',
     name: 'features',
-    message: 'What more would you like?',
+    message: 'Which features would you like? (Press UP/DOWN and SPACE to edit, then press ENTER to continue.)',
     choices: [{
       name: 'Twitter Bootstrap for Sass',
       value: 'compassBootstrap',
       checked: true
     }, {
       name: 'RequireJS',
-      value: 'includeRequireJS',
-      checked: true
+      value: 'requireJS',
+      checked: false
     }, {
       name: 'Autoprefixer for your CSS',
       value: 'autoprefixer',
       checked: true
+    }, {
+      name: 'Modernizr',
+      value: 'modernizr',
+      checked: true
+    }, {
+      name: 'Bertha spreadsheet',
+      value: 'bertha',
+      checked: true
+    }, {
+      name: 'Handlebars templates',
+      value: 'handlebars',
+      checked: true
     }]
   }];
-
-  // Hard coded options
-  this.compassBootstrap = false;
-  this.includeRequireJS = false;
-  this.autoprefixer = true;
-  this.spreadsheetId = null;
-  this.includeBerthaSpreadsheet = false;
-  this.includeHandlebars = false;
-
-  var confirmUsingBerthaSpreadsheet = {
-    type: 'confirm',
-    name: 'includeBerthaSpreadsheet',
-    message: 'Will you be using a Bertha Spreadsheet?',
-    default: true
-  };
 
   var promptSpreadsheetId = {
     type: 'input',
@@ -95,59 +92,47 @@ AppGenerator.prototype.askFor = function askFor() {
     message: 'If you have a Google Spreadsheet URL or ID paste it here. If you don\'t then skip this step:'
   };
 
-  var promptHandlebars = {
-    type: 'confirm',
-    name: 'includeHandlebars',
-    message: 'Include Handlebars templates?',
-    default: true
-  };
+  // Hard coded options
+  this.compassBootstrap = false;
+  this.includeRequireJS = false;
+  this.includeModernizr = false;
+  this.autoprefixer = true;
+  this.spreadsheetId = null;
+  this.includeBerthaSpreadsheet = false;
+  this.includeHandlebars = false;
 
-  function doHandlebarsPrompt() {
-    this.prompt([promptHandlebars], function (answer) {
-      this.includeHandlebars = !!answer.includeHandlebars;
-      cb();
-    }.bind(this));
-  }
+  var gen = this;
+  gen.prompt(promptFeatures, function (answers) {
+    var features = answers.features;
 
+    gen.compassBootstrap = features.indexOf('compassBootstrap') !== -1;
+    gen.includeRequireJS = features.indexOf('requireJS') !== -1;
+    gen.autoprefixer = features.indexOf('autoprefixer') !== -1;
+    gen.includeModernizr = features.indexOf('modernizr') !== -1;
+    gen.includeBerthaSpreadsheet = features.indexOf('bertha') !== -1;
+    gen.includeHandlebars = features.indexOf('handlebars') !== -1;
 
-  this.prompt([confirmUsingBerthaSpreadsheet], function (answer) {
-    if (this.includeBerthaSpreadsheet = !!answer.includeBerthaSpreadsheet) {
+    if (gen.includeBerthaSpreadsheet) {
       (function doSpreadsheetIdPrompt() {
-        this.prompt([promptSpreadsheetId], function (answer) {
-          var id = (answer.spreadsheetId || '').replace(/^[\ \'\"']+/, '').replace(/[\ \'\"']+$/, '');
-          if (id.substring(0,8) === 'https://') {
-            var spreadsheetUrl = require('url').parse(id, true);
-            if (spreadsheetUrl.host === 'docs.google.com' && spreadsheetUrl.query.key) {
-              id = spreadsheetUrl.query.key;
-            }
-            else {
-              this.log('\u001b[31m' + 'Error: Please enter a valid Google Spreadsheet URL (or just a spreadsheet ID).' + '\u001b[0m');
-              doSpreadsheetIdPrompt.call(this);
+        gen.prompt([promptSpreadsheetId], function (answer) {
+          var key;
+          if (answer.spreadsheetId) {
+            try {
+              key = parseSpreadsheetKey(answer.spreadsheetId);
+            } catch (e) {
+              gen.log('\u001b[31m' + 'Error: ' + e.message + '\u001b[0m');
+              doSpreadsheetIdPrompt();
               return;
             }
           }
-          this.spreadsheetId = id;
-          doHandlebarsPrompt.call(this);
-        }.bind(this));
-      }).call(this);
+          gen.spreadsheetId = key;
+          cb();
+        });
+      })();
     } else {
-      doHandlebarsPrompt.call(this);
+      cb();
     }
-
-  }.bind(this));
-
-  // Don't bother to prompt at the moment
-  // this.prompt(prompts, function (answers) {
-  //   var features = answers.features;
-
-  //   // manually deal with the response, get back and store the results.
-  //   // we change a bit this way of doing to automatically do this in the self.prompt() method.
-  //   this.compassBootstrap = features.indexOf('compassBootstrap') !== -1;
-  //   this.includeRequireJS = features.indexOf('includeRequireJS') !== -1;
-  //   this.autoprefixer = features.indexOf('autoprefixer') !== -1;
-
-  //   cb();
-  // }.bind(this));
+  });
 };
 
 AppGenerator.prototype.gruntfile = function gruntfile() {
@@ -196,7 +181,7 @@ AppGenerator.prototype.bootstrapJs = function bootstrapJs() {
 
 AppGenerator.prototype.mainStylesheet = function mainStylesheet() {
   if (this.compassBootstrap) {
-    this.copy('boostrap.scss', 'app/styles/main.scss');
+    this.copy('bootstrap.scss', 'app/styles/main.scss');
   } else {
     this.copy('_var.scss', 'app/styles/_var.scss');
     this.copy('plain.scss', 'app/styles/main.scss');
@@ -261,21 +246,18 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
     this.mainJsFile = this.readFileAsString(path.join(this.sourceRoot(), 'main.js'));
   }
 
-  // insert body Apache SSI tags
-  this.indexFile = this.indexFile.replace('<body>', '<body>\n        <!--#include virtual="/inc/fallback.html" -->\n        <!--#include virtual="/inc/extras-foot-1.html" -->\n');
+  // insert last Apache SSI tag after scripts
   this.indexFile = this.indexFile.replace('</body>', '\n        <!--#include virtual="/inc/extras-foot-2.html" -->\n    </body>');
 
   var bodyClasses = [];
-  
+
   if (this.includeBerthaSpreadsheet) {
     // this is the simplest way to include the body classes
     bodyClasses.push('invisible');
   }
-  
   if (bodyClasses.length) {
     this.indexFile = this.indexFile.replace('<body>',  '<body class="' + bodyClasses.join(' ') + '">');
   }
-
 };
 
 // TODO(mklabs): to be put in a subgenerator like rjs:app
@@ -302,6 +284,8 @@ AppGenerator.prototype.requirejs = function requirejs() {
 
 AppGenerator.prototype.app = function app() {
   this.copy('ftppass', '.ftppass');
+  this.copy('modernizr.json', 'modernizr.json');
+  this.copy('es5-shim.js', 'app/scripts/vendor/es5-shim.js');
   this.mkdir('app');
 
   if (this.includeHandlebars) {
