@@ -315,6 +315,10 @@ AppGenerator.prototype.app = function app() {
   this.mkdir('app/images');
   this.mkdir('app/images/content');
   this.write('app/index.html', this.indexFile);
+  
+  this.mkdir('artwork');
+  this.copy('artwork.md', 'artwork/artwork.md');
+  
   if (!this.includeRequireJS) {
     if (this.includeBerthaSpreadsheet) {
       this.template('config.js', 'app/scripts/config.js');

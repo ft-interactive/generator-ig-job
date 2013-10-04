@@ -1,7 +1,7 @@
 {
   "name": "generator-ig-job",
   "private": "true",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Default IG generator for scaffolding out an interactive",
   "homepage": "https://github.com/ft-interactive/generator-ig-job",
   "bugs": "https://github.com/ft-interactive/generator-ig-job/issues",
