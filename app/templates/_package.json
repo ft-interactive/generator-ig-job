@@ -32,7 +32,7 @@
     "connect-livereload": "~0.2.0",
     "grunt-contrib-handlebars": "~0.5.10",<% if (includeModernizr) { %>
     "grunt-modernizr": "~0.3.0",<% } %>
-    "grunt-embed": "~0.0.5"
+    "grunt-embed": "~0.0.6"
   },
   "engines": {
     "node": ">=0.8.0"
