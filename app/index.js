@@ -191,8 +191,7 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
   var bowerComponentScripts = [
     'bower_components/jquery/jquery.js',
     'bower_components/ig-fill/fill.js',
-    'bower_components/ig-furniture/furniture.js',
-    'bower_components/bertha-ig-gist/request.js'
+    'bower_components/ig-furniture/furniture.js'
   ];
 
   var templateScripts = [
@@ -200,11 +199,14 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
     'scripts/handlebars-helpers.js'
   ];
 
-  var projectScripts = [
-      'scripts/config.js',
-      'scripts/data.js',
-      'scripts/main.js'
-  ];
+  var projectScripts = ['scripts/config.js'];
+
+  if (this.includeBerthaSpreadsheet) {
+    bowerComponentScripts.push('bower_components/bertha-ig-gist/request.js');
+    projectScripts.push('scripts/data.js');
+  }
+
+  projectScripts.push('scripts/main.js');
 
   var scriptList;
 
@@ -216,6 +218,13 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
 
   if (!this.includeRequireJS) {
     this.indexFile = this.appendFiles(this.indexFile, 'js', 'scripts/main.js', scriptList, null, ['.tmp', 'app']);
+  }
+
+  var indent = '        ';
+
+  if (this.includeModernizr) {
+    var modernizrBlock = this.generateBlock('js', 'scripts/vendor/top.js', indent + '<script src="scripts/vendor/modernizr.js"></script>\n', ['.tmp', 'app']);
+    this.indexFile = this.append(this.indexFile, 'head', '\n' + modernizrBlock + '\n');
   }
 
   if (this.compassBootstrap && !this.includeRequireJS) {
@@ -241,8 +250,11 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
     this.mainJsFile = this.readFileAsString(path.join(this.sourceRoot(), 'main.js'));
   }
 
+  // insert Apache SSI tag as the last item in the head element
+  this.indexFile = this.append(this.indexFile, 'head', '\n' + indent + '<!--#include virtual="/inc/extras-head-2.html" -->\n    ');
+
   // insert last Apache SSI tag after scripts
-  this.indexFile = this.indexFile.replace('</body>', '\n        <!--#include virtual="/inc/extras-foot-2.html" -->\n    </body>');
+  this.indexFile = this.append(this.indexFile, 'body', '\n' + indent + '<!--#include virtual="/inc/extras-foot-2.html" -->\n    ');
 
   var bodyClasses = [];
 
@@ -250,6 +262,7 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
     // this is the simplest way to include the body classes
     bodyClasses.push('invisible');
   }
+
   if (bodyClasses.length) {
     this.indexFile = this.indexFile.replace('<body>',  '<body class="' + bodyClasses.join(' ') + '">');
   }
@@ -279,7 +292,11 @@ AppGenerator.prototype.requirejs = function requirejs() {
 
 AppGenerator.prototype.app = function app() {
   this.copy('ftppass', '.ftppass');
-  this.copy('modernizr.json', 'modernizr.json');
+  
+  if (this.includeModernizr) {
+    this.copy('modernizr.json', 'modernizr.json');
+  }
+  
   this.copy('es5-shim.js', 'app/scripts/vendor/es5-shim.js');
   this.mkdir('app');
 
@@ -300,9 +317,9 @@ AppGenerator.prototype.app = function app() {
   
   if (!this.includeRequireJS) {
     if (this.includeBerthaSpreadsheet) {
-      this.template('config.js', 'app/scripts/config.js');
       this.template('data.js', 'app/scripts/data.js');
     }
+    this.template('config.js', 'app/scripts/config.js');
     this.template('main.js', 'app/scripts/main.js');
   }
 };
