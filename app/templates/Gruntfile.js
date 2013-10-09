@@ -400,20 +400,20 @@ module.exports = function (grunt) {
             }
         },
         concurrent: {
-            server: [
-                <% if (includeHandlebars) { %>'templates',<% } %><% if (includeModernizr) { %>
+            server: [<% if (includeHandlebars) { %>
+                'templates',<% } %><% if (includeModernizr) { %>
                 'modernizr',<% } %>
                 'compass',
                 'coffee:dist',
                 'copy:styles'
             ],
-            test: [
-                <% if (includeHandlebars) { %>'templates',<% } %>
+            test: [<% if (includeHandlebars) { %>
+                'templates',<% } %>
                 'coffee',
                 'copy:styles'
             ],
-            dist: [
-                <% if (includeHandlebars) { %>'templates',<% } %><% if (includeModernizr) { %>
+            dist: [<% if (includeHandlebars) { %>
+                'templates',<% } %><% if (includeModernizr) { %>
                 'modernizr',<% } %>
                 'coffee',
                 'compass',
