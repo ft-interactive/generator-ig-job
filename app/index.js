@@ -326,6 +326,8 @@ AppGenerator.prototype.app = function app() {
 
   if (this.includePublisher) {
     this.copy('publish.html', 'app/publish.html');
+  } else {
+    this.copy('no-publish.html', 'app/publish.html');
   }
   
   this.mkdir('artwork');
