@@ -58,7 +58,7 @@
     * that have not been set on the frame - i.e it will never override
     * the iframe's explicitly defined dimensions (unless it's 0px).
     */
-    // IG.iframeUtils.resizeZeroParentFrameValuesToContent()
+    // IG.iframeUtils.resizeZeroParentFrameValuesToContent();
 
     /**
     * This method makes sure all links open in a new tab.

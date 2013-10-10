@@ -55,7 +55,7 @@ module.exports = function (grunt) {
                     livereload: LIVERELOAD_PORT
                 },
                 files: [
-                    '<%%= yeoman.app %>/*.html',
+                    ['<%%= yeoman.app %>/*.html'<% if (includePublisher) { %>, '!<%%= yeoman.app %>/publish.html'<% } %>],
                     '.tmp/styles/{,*/}*.css',
                     '{.tmp,<%%= yeoman.app %>}/scripts/{,*/}*.js',
                     '<%%= yeoman.app %>/images/**/*.{png,jpg,jpeg,gif,webp,svg}'
@@ -100,7 +100,7 @@ module.exports = function (grunt) {
         },
         open: {
             server: {
-                path: 'http://localhost:<%%= connect.options.port %>'
+                path: 'http://localhost:<%%= connect.options.port %><% if (includePublisher) { %>/publish.html<% } %>'
             }
         },
         clean: {
@@ -251,7 +251,7 @@ module.exports = function (grunt) {
             options: {
                 dest: '<%%= yeoman.dist %>'
             },
-            html: '<%%= yeoman.app %>/index.html'
+            html: ['<%%= yeoman.app %>/index.html'<% if (includePublisher) { %>,'<%%= yeoman.app %>/publish.html'<% } %>]
         },
         usemin: {
             options: {

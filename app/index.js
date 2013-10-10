@@ -101,7 +101,7 @@ AppGenerator.prototype.askFor = function askFor() {
   this.includeBerthaSpreadsheet = false;
   this.includeHandlebars = false;
   this.includeIFrame = true;
-
+  this.includePublisher = false;
   var gen = this;
   gen.prompt(promptFeatures, function (answers) {
     var features = answers.features;
@@ -113,6 +113,7 @@ AppGenerator.prototype.askFor = function askFor() {
     gen.includeModernizr = features.indexOf('modernizr') !== -1;
     gen.includeBerthaSpreadsheet = features.indexOf('bertha') !== -1;
     gen.includeHandlebars = features.indexOf('handlebars') !== -1;
+    gen.includePublisher = gen.includeBerthaSpreadsheet && gen.includeIFrame;
 
     if (gen.includeBerthaSpreadsheet) {
       (function doSpreadsheetIdPrompt() {
@@ -322,6 +323,10 @@ AppGenerator.prototype.app = function app() {
   this.mkdir('app/images');
   this.mkdir('app/images/content');
   this.write('app/index.html', this.indexFile);
+
+  if (this.includePublisher) {
+    this.copy('publish.html', 'app/publish.html');
+  }
   
   this.mkdir('artwork');
   this.copy('artwork.md', 'artwork/artwork.md');
