@@ -65,6 +65,11 @@ AppGenerator.prototype.askFor = function askFor() {
       checked: true
     },
     {
+      name: 'Will the job be served in an iframe?',
+      value: 'iframe',
+      checked: true
+    },
+    {
       name: 'Modernizr',
       value: 'modernizr',
       checked: true
@@ -95,6 +100,7 @@ AppGenerator.prototype.askFor = function askFor() {
   this.spreadsheetId = null;
   this.includeBerthaSpreadsheet = false;
   this.includeHandlebars = false;
+  this.includeIFrame = true;
 
   var gen = this;
   gen.prompt(promptFeatures, function (answers) {
@@ -102,6 +108,7 @@ AppGenerator.prototype.askFor = function askFor() {
 
     gen.compassBootstrap = features.indexOf('compassBootstrap') !== -1;
     gen.includeRequireJS = features.indexOf('requireJS') !== -1;
+    gen.includeIFrame = features.indexOf('iframe') !== -1;
     gen.autoprefixer = features.indexOf('autoprefixer') !== -1;
     gen.includeModernizr = features.indexOf('modernizr') !== -1;
     gen.includeBerthaSpreadsheet = features.indexOf('bertha') !== -1;
@@ -200,6 +207,10 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
   ];
 
   var projectScripts = ['scripts/config.js'];
+
+  if (this.includeIFrame) {
+    bowerComponentScripts.push('bower_components/ig-utils/js/iframe-utils.js');
+  }
 
   if (this.includeBerthaSpreadsheet) {
     bowerComponentScripts.push('bower_components/bertha-ig-gist/request.js');
