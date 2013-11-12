@@ -11,6 +11,8 @@
   //   - YES: $el.find('#my-div');
   //   - NO : $('#my-div');
   var $el = $(app.config.container);
+  console.log($el);
+
 <% if (includeBerthaSpreadsheet) { %>
   app.spreadsheet.get(function (data) {
 
