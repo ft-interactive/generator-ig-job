@@ -26,13 +26,13 @@
     "grunt-mocha": "~0.3.0",<% } %>
     "grunt-open": "~0.2.0",
     "grunt-svgmin": "~0.1.0",
-    "grunt-sftp-deploy": "~0.0.8",
     "grunt-concurrent": "~0.1.0",
     "matchdep": "~0.1.1",
     "connect-livereload": "~0.2.0",
     "grunt-contrib-handlebars": "~0.5.10",<% if (includeModernizr) { %>
     "grunt-modernizr": "~0.3.0",<% } %>
-    "grunt-embed": "~0.0.6"
+    "grunt-embed": "~0.0.6",
+    "grunt-igdeploy": "git+https://github.com/callumlocke/grunt-igdeploy.git"
   },
   "engines": {
     "node": ">=0.8.0"

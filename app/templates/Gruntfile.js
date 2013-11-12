@@ -99,8 +99,14 @@ module.exports = function (grunt) {
             }
         },
         open: {
-            server: {
+            local: {
                 path: 'http://localhost:<%%= connect.options.port %><% if (includePublisher) { %>/publish.html<% } %>'
+            },
+            demo: {
+                path: 'http://www.ft.com/ig/<%%= igdeploy.options.targets.demo %>/'
+            },
+            live: {
+                path: 'http://www.ft.com/ig/<%%= igdeploy.options.targets.live %>/'
             }
         },
         clean: {
@@ -369,16 +375,15 @@ module.exports = function (grunt) {
                 }
             }
         },<% } %>
-        'sftp-deploy': {
-            build: {
-                auth: {
-                    host: 'ftlnx109-lviw-uk-p',
-                    port: 22,
-                    authKey: 'local'
-                },
-                src: '<%%= yeoman.dist %>',
-                dest: '/var/opt/customer/apps/interactive.ftdata.co.uk/var/www/html/features/b/<%= _.slugify(appname) %>',
-                exclusions: ['<%%= yeoman.dist %>/**/.DS_Store', '<%%= yeoman.dist %>/**/Thumbs.db','<%%= yeoman.dist %>/**/.git*'],
+        igdeploy: {
+            options: {
+                src: 'dist',
+                server: 'ftlnx109-lviw-uk-p.osb.ft.com',
+                targetRoot: '/var/opt/customer/apps/interactive.ftdata.co.uk/var/www/html',
+                targets: {
+                    demo: '<%= deployBase %>/demo',
+                    live: '<%= deployBase %>/live'
+                }
             }
         },<% if (includeModernizr) { %>
         modernizr: {
@@ -435,7 +440,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('server', function (target) {
         if (target === 'dist') {
-            return grunt.task.run(['build', 'open', 'connect:dist:keepalive']);
+            return grunt.task.run(['build', 'open:local', 'connect:dist:keepalive']);
         }
 
         grunt.task.run([
@@ -443,7 +448,7 @@ module.exports = function (grunt) {
             'concurrent:server',<% if (autoprefixer) { %>
             'autoprefixer',<% } %>
             'connect:livereload',
-            'open',
+            'open:local',
             'watch'
         ]);
     });
@@ -483,8 +488,14 @@ module.exports = function (grunt) {
         'build'
     ]);
 
-    grunt.registerTask('deploy', [
-        'default',
-        'sftp-deploy'
-    ]);
+    grunt.registerTask('deploy', function (target) {
+        if (!grunt.file.isDir('dist')) {
+            grunt.fail.fatal('Couldn\'t find "dist" - please build before deploying!');
+        }
+
+        grunt.task.run([
+            'igdeploy:' + target,
+            'open:' + target
+        ]);
+    });
 };

@@ -7,7 +7,7 @@
 <% if (includeIFrame) { %>
   IG.iframeUtils.setDocumentDomain();
 <% } %>
-  // Scope all DOM queries and manipulation to a root element, not the body or document. 
+  // Scope all DOM queries and manipulation to a root element, not the body or document.
   //   - YES: $el.find('#my-div');
   //   - NO : $('#my-div');
   var $el = $(app.config.container);
@@ -16,7 +16,7 @@
 <% if (includeBerthaSpreadsheet) { %>
   app.spreadsheet.get(function (data) {
 
-    // REMOVE: this console when you are happy the data is coming from the server 
+    // REMOVE: this console when you are happy the data is coming from the server
     console.log('Data returned from Bertha', data);
 
     // Makes "options" sheet available from a template helper
@@ -55,7 +55,7 @@
     /**
     * ... or, instead of the above example, you can
     * call the following method...
-    * 
+    *
     * It sets the size of the parent frame along the sides
     * that have not been set on the frame - i.e it will never override
     * the iframe's explicitly defined dimensions (unless it's 0px).
