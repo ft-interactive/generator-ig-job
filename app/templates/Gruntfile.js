@@ -391,7 +391,7 @@ module.exports = function (grunt) {
         },<% } %>
         embed: {
             options: {
-                threshold: 0
+                threshold: '7KB'
             },
             dist: {
                 files: {
@@ -473,8 +473,8 @@ module.exports = function (grunt) {
         'uglify',
         'copy:dist',
         'rev',
-        'usemin',
-        'embed:dist'
+        'usemin'//,
+        // 'embed:dist'
     ]);
 
     grunt.registerTask('default', [
