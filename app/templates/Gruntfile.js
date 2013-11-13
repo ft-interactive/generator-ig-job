@@ -391,7 +391,7 @@ module.exports = function (grunt) {
         },<% } %>
         embed: {
             options: {
-                threshold: '7KB'
+                threshold: 0
             },
             dist: {
                 files: {
