@@ -32,7 +32,7 @@
     "grunt-contrib-handlebars": "~0.5.10",<% if (includeModernizr) { %>
     "grunt-modernizr": "~0.3.0",<% } %>
     "grunt-embed": "~0.0.6",
-    "grunt-igdeploy": "git+https://github.com/callumlocke/grunt-igdeploy.git"
+    "grunt-igdeploy": "git+https://github.com/ft-interactive/grunt-igdeploy.git"
   },
   "engines": {
     "node": ">=0.8.0"
