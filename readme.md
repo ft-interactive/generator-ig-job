@@ -9,6 +9,19 @@ Yeoman generator that scaffolds out an interactive-graphic/news-app.
 - Run: `yo ig-job`
 - Run `grunt` for building and `grunt server` for preview
 
+## Deploying
+
+* Type `grunt deploy:live` or `grunt deploy:demo`.
+
+You will need an `.igdeploy` file (ideally in your home directory), which should look like this:
+
+```json
+{
+  "username": "John.Smith",
+  "password": "kittens"
+}
+```
+
 
 ## Options
 

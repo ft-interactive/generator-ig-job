@@ -4,6 +4,7 @@ var path = require('path');
 var spawn = require('child_process').spawn;
 var yeoman = require('yeoman-generator');
 var parseSpreadsheetKey = require('parse-spreadsheet-key');
+var moment = require('moment');
 
 var AppGenerator = module.exports = function Appgenerator(args, options, config) {
   yeoman.generators.Base.apply(this, arguments);
@@ -115,26 +116,36 @@ AppGenerator.prototype.askFor = function askFor() {
     gen.includeHandlebars = features.indexOf('handlebars') !== -1;
     gen.includePublisher = gen.includeBerthaSpreadsheet && gen.includeIFrame;
 
-    if (gen.includeBerthaSpreadsheet) {
-      (function doSpreadsheetIdPrompt() {
-        gen.prompt([promptSpreadsheetId], function (answer) {
-          var key;
-          if (answer.spreadsheetId) {
-            try {
-              key = parseSpreadsheetKey(answer.spreadsheetId);
-            } catch (e) {
-              gen.log('\u001b[31m' + 'Error: ' + e.message + '\u001b[0m');
-              doSpreadsheetIdPrompt();
-              return;
-            }
-          }
-          gen.spreadsheetId = key;
+    var suggestedDeployBase = 'features/' + moment().format('YYYY-MM-DD') + '_' + path.basename(process.cwd());
+    var deployBasePrompt = {
+        'message': 'Where should this project be deployed to?',
+        'name': 'deployBase',
+        'default': suggestedDeployBase
+    };
+    gen.prompt([deployBasePrompt], function (answer) {
+        gen.deployBase = answer.deployBase;
+
+        if (gen.includeBerthaSpreadsheet) {
+          (function doSpreadsheetIdPrompt() {
+            gen.prompt([promptSpreadsheetId], function (answer) {
+              var key;
+              if (answer.spreadsheetId) {
+                try {
+                  key = parseSpreadsheetKey(answer.spreadsheetId);
+                } catch (e) {
+                  gen.log('\u001b[31m' + 'Error: ' + e.message + '\u001b[0m');
+                  doSpreadsheetIdPrompt();
+                  return;
+                }
+              }
+              gen.spreadsheetId = key;
+              cb();
+            });
+          })();
+        } else {
           cb();
-        });
-      })();
-    } else {
-      cb();
-    }
+        }
+    });
   });
 };
 
@@ -303,12 +314,10 @@ AppGenerator.prototype.requirejs = function requirejs() {
 };
 
 AppGenerator.prototype.app = function app() {
-  this.copy('ftppass', '.ftppass');
-  
   if (this.includeModernizr) {
     this.copy('modernizr.json', 'modernizr.json');
   }
-  
+
   this.copy('es5-shim.js', 'app/scripts/vendor/es5-shim.js');
   this.mkdir('app');
 
@@ -329,10 +338,10 @@ AppGenerator.prototype.app = function app() {
   } else {
     this.copy('no-publish.html', 'app/publish.html');
   }
-  
+
   this.mkdir('artwork');
   this.copy('artwork.md', 'artwork/artwork.md');
-  
+
   if (!this.includeRequireJS) {
     if (this.includeBerthaSpreadsheet) {
       this.template('data.js', 'app/scripts/data.js');

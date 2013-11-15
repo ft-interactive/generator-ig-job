@@ -3,5 +3,5 @@ dist
 .DS_Store
 .tmp
 .sass-cache
-.ftppass
+.igdeploy
 app/bower_components
