@@ -249,7 +249,7 @@ module.exports = function (grunt) {
                         '<%%= yeoman.dist %>/scripts/{,*/}*.js',
                         '<%%= yeoman.dist %>/styles/{,*/}*.css',
                         ['<%%= yeoman.dist %>/images/**/*.{png,jpg,jpeg,gif,webp}', '!<%%= yeoman.dist %>/images/content/**/*.{png,jpg,jpeg,gif,webp}'],
-                        '<%%= yeoman.dist %>/styles/fonts/*'
+                        '<%%= yeoman.dist %>/styles/fonts/**/*.{eot,woff,ttf}'
                     ]
                 }
             }
@@ -336,7 +336,7 @@ module.exports = function (grunt) {
                         '*.{ico,png,txt}',
                         '.htaccess',
                         'images/**/*.{webp,gif}',
-                        'styles/fonts/*',
+                        'styles/fonts/**/*.{eot,woff,ttf}',
                         'scripts/vendor/es5-shim.js'
                     ]
                 }]
