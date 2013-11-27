@@ -405,6 +405,14 @@ module.exports = function (grunt) {
                 }
             }
         },
+        report: {
+            demo: {
+                url: 'http://www.ft.com/ig/<%%= igdeploy.options.targets.demo %>/'
+            },
+            live: {
+                url: 'http://www.ft.com/ig/<%%= igdeploy.options.targets.live %>/'
+            }
+        },
         concurrent: {
             server: [<% if (includeHandlebars) { %>
                 'templates',<% } %><% if (includeModernizr) { %>
@@ -496,6 +504,7 @@ module.exports = function (grunt) {
 
         grunt.task.run([
             'igdeploy:' + target,
+            'report:' + target,
             'open:' + target
         ]);
     });
