@@ -407,6 +407,9 @@ module.exports = function (grunt) {
         },
         report: {
             demo: {
+                options: {
+                    consoleMessages: 'ok'
+                },
                 url: 'http://www.ft.com/ig/<%%= igdeploy.options.targets.demo %>/'
             },
             live: {
