@@ -151,7 +151,8 @@ module.exports = function (grunt) {
                 httpImagesPath: '/images',
                 httpGeneratedImagesPath: '/images/generated',
                 httpFontsPath: '/styles/fonts',
-                relativeAssets: false
+                relativeAssets: false,
+                assetCacheBuster: false
             },
             dist: {
                 options: {
@@ -220,7 +221,7 @@ module.exports = function (grunt) {
                         '<%%= yeoman.dist %>/scripts/{,*/}*.js',
                         '<%%= yeoman.dist %>/styles/{,*/}*.css',
                         ['<%%= yeoman.dist %>/images/**/*.{png,jpg,jpeg,gif,webp}', '!<%%= yeoman.dist %>/images/content/**/*.{png,jpg,jpeg,gif,webp}'],
-                        '<%%= yeoman.dist %>/styles/fonts/*'
+                        '<%%= yeoman.dist %>/styles/fonts/**/*.{eot,woff,ttf}'
                     ]
                 }
             }
@@ -307,7 +308,7 @@ module.exports = function (grunt) {
                         '*.{ico,png,txt}',
                         '.htaccess',
                         'images/**/*.{webp,gif}',
-                        'styles/fonts/*',
+                        'styles/fonts/**/*.{eot,woff,ttf}',
                         'scripts/vendor/es5-shim.js'
                     ]
                 }]
@@ -374,6 +375,14 @@ module.exports = function (grunt) {
                 files: {
                     '<%%= yeoman.dist %>/index.html': '<%%= yeoman.dist %>/index.html'
                 }
+            }
+        },
+        report: {
+            demo: {
+                url: 'http://www.ft.com/ig/<%%= igdeploy.options.targets.demo %>/'
+            },
+            live: {
+                url: 'http://www.ft.com/ig/<%%= igdeploy.options.targets.live %>/'
             }
         },
         concurrent: {
@@ -464,6 +473,7 @@ module.exports = function (grunt) {
 
         grunt.task.run([
             'igdeploy:' + target,
+            'report:' + target,
             'open:' + target
         ]);
     });
