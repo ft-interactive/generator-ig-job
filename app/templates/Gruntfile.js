@@ -30,14 +30,6 @@ module.exports = function (grunt) {
     grunt.initConfig({
         yeoman: yeomanConfig,
         watch: {
-            coffee: {
-                files: ['<%%= yeoman.app %>/scripts/{,*/}*.coffee'],
-                tasks: ['coffee:dist']
-            },
-            coffeeTest: {
-                files: ['test/spec/{,*/}*.coffee'],
-                tasks: ['coffee:test']
-            },
             compass: {
                 files: ['<%%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
                 tasks: ['compass:server'<% if (autoprefixer) { %>, 'autoprefixer'<% } %>]
@@ -147,26 +139,6 @@ module.exports = function (grunt) {
                 }
             }
         },<% } %>
-        coffee: {
-            dist: {
-                files: [{
-                    expand: true,
-                    cwd: '<%%= yeoman.app %>/scripts',
-                    src: '{,*/}*.coffee',
-                    dest: '.tmp/scripts',
-                    ext: '.js'
-                }]
-            },
-            test: {
-                files: [{
-                    expand: true,
-                    cwd: 'test/spec',
-                    src: '{,*/}*.coffee',
-                    dest: '.tmp/spec',
-                    ext: '.js'
-                }]
-            }
-        },
         compass: {
             options: {
                 sassDir: '<%%= yeoman.app %>/styles',
@@ -409,18 +381,15 @@ module.exports = function (grunt) {
                 'templates',<% } %><% if (includeModernizr) { %>
                 'modernizr',<% } %>
                 'compass',
-                'coffee:dist',
                 'copy:styles'
             ],
             test: [<% if (includeHandlebars) { %>
                 'templates',<% } %>
-                'coffee',
                 'copy:styles'
             ],
             dist: [<% if (includeHandlebars) { %>
                 'templates',<% } %><% if (includeModernizr) { %>
                 'modernizr',<% } %>
-                'coffee',
                 'compass',
                 'copy:styles',
                 'imagemin',
