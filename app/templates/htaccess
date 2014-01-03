@@ -93,14 +93,15 @@ AddType application/json               json
 
 # Audio
 AddType audio/mp4                      m4a f4a f4b
-AddType audio/ogg                      oga ogg
-AddType audio/mpeg					   mpga mp2 mp2a mp3 m2a m3a
+AddType audio/ogg                      oga
+AddType audio/mpeg                     mpga mp2 mp2a mp3 m2a m3a
 
 # Video
 AddType video/mp4                      mp4 m4v f4v f4p
 AddType video/ogg                      ogv
 AddType video/webm                     webm
 AddType video/x-flv                    flv
+AddType application/ogg                ogg
 
 # SVG
 #   Required for svg webfonts on iPad
@@ -395,31 +396,31 @@ AddCharset utf-8 .atom .css .js .json .rss .vtt .xml
 # https://gist.github.com/gustavobeavis/4962250
 # http://www.josscrowcroft.com/2012/code/htaccess-for-html5-history-pushstate-url-routing/
 # ----------------------------------------------------------------------
-<IfModule mod_rewrite.c>
+# <IfModule mod_rewrite.c>
 
-  # Redirect all files and paths to index.html (general rule)
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteCond %{REQUEST_URI} !index
-  RewriteRule (.*) index.html [L]
+#   Redirect all files and paths to index.html (general rule)
+#   RewriteCond %{REQUEST_FILENAME} !-f
+#   RewriteCond %{REQUEST_FILENAME} !-d
+#   RewriteCond %{REQUEST_URI} !index
+#   RewriteRule (.*) index.html [L]
 
-  # Declare path and files where don't apply general rules
-  # # scripts/./../* -  not apply general rule redirect of all folders and files to path "/scripts"
-  RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-d
-  RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-f
-  RewriteRule scripts/(.*)$ scripts/$1 [L,QSA]
+#   Declare path and files where don't apply general rules
+#   # scripts/./../* -  not apply general rule redirect of all folders and files to path "/scripts"
+#   RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-d
+#   RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-f
+#   RewriteRule scripts/(.*)$ scripts/$1 [L,QSA]
 
-  # # images/./../* -  not apply general rule redirect of all folders and files to path "/images"
-  RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-d
-  RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-f
-  RewriteRule images/(.*)$ images/$1 [L,QSA]
+#   # images/./../* -  not apply general rule redirect of all folders and files to path "/images"
+#   RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-d
+#   RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-f
+#   RewriteRule images/(.*)$ images/$1 [L,QSA]
 
-  # # styles/./../* -  not apply general rule redirect of all folders and files to path "/styles"
-  RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-d
-  RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-f
-  RewriteRule styles/(.*)$ styles/$1 [L,QSA]
+#   # styles/./../* -  not apply general rule redirect of all folders and files to path "/styles"
+#   RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-d
+#   RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-f
+#   RewriteRule styles/(.*)$ styles/$1 [L,QSA]
 
-</IfModule>
+# </IfModule>
 
 
 # ----------------------------------------------------------------------
