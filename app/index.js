@@ -20,7 +20,7 @@ var AppGenerator = module.exports = function Appgenerator(args, options, config)
   // resolved to mocha by default (could be switched to jasmine for instance)
   this.hookFor('test-framework', { as: 'app' });
 
-  this.indexFile = this.readFileAsString(path.join(this.sourceRoot(), 'index.html'));
+  //this.indexFile = this.readFileAsString(path.join(this.sourceRoot(), 'index.html'));
   this.mainJsFile = '';
 
   this.on('end', function () {
@@ -79,11 +79,6 @@ AppGenerator.prototype.askFor = function askFor() {
       name: 'Handlebars templates',
       value: 'handlebars',
       checked: true
-    },
-    {
-      name: 'Autoprefixer for your CSS',
-      value: 'autoprefixer',
-      checked: true
     }]
   }];
 
@@ -94,10 +89,7 @@ AppGenerator.prototype.askFor = function askFor() {
   };
 
   // Hard coded options
-  this.compassBootstrap = false;
-  this.includeRequireJS = false;
   this.includeModernizr = false;
-  this.autoprefixer = true;
   this.spreadsheetId = null;
   this.includeBerthaSpreadsheet = false;
   this.includeHandlebars = false;
@@ -107,10 +99,7 @@ AppGenerator.prototype.askFor = function askFor() {
   gen.prompt(promptFeatures, function (answers) {
     var features = answers.features;
 
-    gen.compassBootstrap = features.indexOf('compassBootstrap') !== -1;
-    gen.includeRequireJS = features.indexOf('requireJS') !== -1;
     gen.includeIFrame = features.indexOf('iframe') !== -1;
-    gen.autoprefixer = features.indexOf('autoprefixer') !== -1;
     gen.includeModernizr = features.indexOf('modernizr') !== -1;
     gen.includeBerthaSpreadsheet = features.indexOf('bertha') !== -1;
     gen.includeHandlebars = features.indexOf('handlebars') !== -1;
@@ -179,33 +168,18 @@ AppGenerator.prototype.h5bp = function h5bp() {
   this.copy('htaccess', 'app/.htaccess');
 };
 
-AppGenerator.prototype.bootstrapImg = function bootstrapImg() {
-  if (this.compassBootstrap) {
-    this.copy('glyphicons-halflings.png', 'app/images/glyphicons-halflings.png');
-    this.copy('glyphicons-halflings-white.png', 'app/images/glyphicons-halflings-white.png');
-  }
-};
-
-AppGenerator.prototype.bootstrapJs = function bootstrapJs() {
-  // TODO: create a Bower component for this
-  if (this.compassBootstrap) {
-    this.copy('bootstrap.js', 'app/scripts/vendor/bootstrap.js');
-  }
-};
-
 AppGenerator.prototype.mainStylesheet = function mainStylesheet() {
-  if (this.compassBootstrap) {
-    this.copy('bootstrap.scss', 'app/styles/main.scss');
-  } else {
-    this.copy('_var.scss', 'app/styles/_var.scss');
-    this.copy('plain.scss', 'app/styles/main.scss');
-  }
+  this.copy('_var.scss', 'app/styles/_var.scss');
+  this.copy('plain.scss', 'app/styles/main.scss');
 };
 
 AppGenerator.prototype.writeIndex = function writeIndex() {
   // prepare default content text
   var defaults = [];
   var contentText = [];
+
+  this.indexFile = this.readFileAsString(path.join(this.sourceRoot(), 'index.html'));
+  this.indexFile = this.engine(this.indexFile, this);
 
   var bowerComponentScripts = [
     'bower_components/jquery/jquery.js',
@@ -239,9 +213,7 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
     scriptList = bowerComponentScripts.concat(projectScripts);
   }
 
-  if (!this.includeRequireJS) {
-    this.indexFile = this.appendFiles(this.indexFile, 'js', 'scripts/main.js', scriptList, null, ['.tmp', 'app']);
-  }
+  this.indexFile = this.appendFiles(this.indexFile, 'js', 'scripts/main.js', scriptList, null, ['.tmp', 'app']);
 
   var indent = '        ';
 
@@ -250,28 +222,7 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
     this.indexFile = this.append(this.indexFile, 'head', '\n' + modernizrBlock + '\n');
   }
 
-  if (this.compassBootstrap && !this.includeRequireJS) {
-    // wire Twitter Bootstrap plugins
-    this.indexFile = this.appendFiles(this.indexFile, 'js', 'scripts/plugins.js', [
-      'bower_components/sass-bootstrap/js/bootstrap-affix.js',
-      'bower_components/sass-bootstrap/js/bootstrap-alert.js',
-      'bower_components/sass-bootstrap/js/bootstrap-dropdown.js',
-      'bower_components/sass-bootstrap/js/bootstrap-tooltip.js',
-      'bower_components/sass-bootstrap/js/bootstrap-modal.js',
-      'bower_components/sass-bootstrap/js/bootstrap-transition.js',
-      'bower_components/sass-bootstrap/js/bootstrap-button.js',
-      'bower_components/sass-bootstrap/js/bootstrap-popover.js',
-      'bower_components/sass-bootstrap/js/bootstrap-typeahead.js',
-      'bower_components/sass-bootstrap/js/bootstrap-carousel.js',
-      'bower_components/sass-bootstrap/js/bootstrap-scrollspy.js',
-      'bower_components/sass-bootstrap/js/bootstrap-collapse.js',
-      'bower_components/sass-bootstrap/js/bootstrap-tab.js'
-    ], null, []);
-  }
-
-  if (!this.includeRequireJS) {
-    this.mainJsFile = this.readFileAsString(path.join(this.sourceRoot(), 'main.js'));
-  }
+  this.mainJsFile = this.readFileAsString(path.join(this.sourceRoot(), 'main.js'));
 
   // insert Apache SSI tag as the last item in the head element
   this.indexFile = this.append(this.indexFile, 'head', '\n' + indent + '<!--#include virtual="/inc/extras-head-2.html" -->\n    ');
@@ -289,28 +240,6 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
   if (bodyClasses.length) {
     this.indexFile = this.indexFile.replace('<body>',  '<body class="' + bodyClasses.join(' ') + '">');
   }
-};
-
-// TODO(mklabs): to be put in a subgenerator like rjs:app
-AppGenerator.prototype.requirejs = function requirejs() {
-  if (!this.includeRequireJS) {
-    return;
-  }
-
-  this.indexFile = this.appendScripts(this.indexFile, 'scripts/main.js', ['bower_components/requirejs/require.js'], {
-    'data-main': 'scripts/main'
-  });
-
-  // add a basic amd module
-  this.write('app/scripts/app.js', [
-    '/*global define */',
-    'define([], function () {',
-    '    \'use strict\';\n',
-    '    return \'\\\'Allo \\\'Allo!\';',
-    '});'
-  ].join('\n'));
-
-  this.template('require_main.js', 'app/scripts/main.js');
 };
 
 AppGenerator.prototype.app = function app() {
@@ -342,11 +271,9 @@ AppGenerator.prototype.app = function app() {
   this.mkdir('artwork');
   this.copy('artwork.md', 'artwork/artwork.md');
 
-  if (!this.includeRequireJS) {
-    if (this.includeBerthaSpreadsheet) {
-      this.template('data.js', 'app/scripts/data.js');
-    }
-    this.template('config.js', 'app/scripts/config.js');
-    this.template('main.js', 'app/scripts/main.js');
+  if (this.includeBerthaSpreadsheet) {
+    this.template('data.js', 'app/scripts/data.js');
   }
+  this.template('config.js', 'app/scripts/config.js');
+  this.template('main.js', 'app/scripts/main.js');
 };
