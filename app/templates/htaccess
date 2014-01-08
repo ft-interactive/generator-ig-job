@@ -58,7 +58,7 @@ AddOutputFilter INCLUDES .html
 <IfModule mod_setenvif.c>
   <IfModule mod_headers.c>
     # mod_headers, y u no match by Content-Type?!
-    <FilesMatch "\.(gif|ico|jpe?g|png|svg|svgz|webp)$">
+    <FilesMatch "\.(cur|gif|ico|jpe?g|png|svgz?|webp)$">
       SetEnvIf Origin ":" IS_CORS
       Header set Access-Control-Allow-Origin "*" env=IS_CORS
     </FilesMatch>
@@ -75,7 +75,7 @@ AddOutputFilter INCLUDES .html
 # subdomains like "subdomain.example.com".
 
 <IfModule mod_headers.c>
-  <FilesMatch "\.(eot|font.css|otf|ttc|ttf|woff)$">
+  <FilesMatch "\.(eot|otf|ttc|ttf|woff)$">
     Header set Access-Control-Allow-Origin "*"
   </FilesMatch>
 </IfModule>
@@ -88,7 +88,7 @@ AddOutputFilter INCLUDES .html
 # JavaScript
 #   Normalize to standard type (it's sniffed in IE anyways)
 #   tools.ietf.org/html/rfc4329#section-7.2
-AddType application/javascript         js jsonp
+AddType application/javascript         js
 AddType application/json               json
 
 # Audio
@@ -97,7 +97,7 @@ AddType audio/ogg                      oga
 AddType audio/mpeg                     mpga mp2 mp2a mp3 m2a m3a
 
 # Video
-AddType video/mp4                      mp4 m4v f4v f4p
+AddType video/mp4                      f4v f4p m4v mp4
 AddType video/ogg                      ogv
 AddType video/webm                     webm
 AddType video/x-flv                    flv
@@ -125,6 +125,7 @@ AddType application/x-xpinstall             xpi
 AddType application/xml                     rss atom xml rdf
 AddType image/webp                          webp
 AddType image/x-icon                        ico
+AddType image/x-icon                        cur
 AddType text/cache-manifest                 appcache manifest
 AddType text/vtt                            vtt
 AddType text/x-component                    htc
@@ -204,7 +205,7 @@ AddType text/x-vcard                        vcf
   ExpiresByType application/atom+xml      "access plus 1 hour"
   ExpiresByType application/rss+xml       "access plus 1 hour"
 
-# Favicon (cannot be renamed)
+# Favicon (cannot be renamed!) and cursor images
   ExpiresByType image/x-icon              "access plus 1 week"
 
 # Media: images, video, audio
@@ -313,6 +314,8 @@ SetEnvIf brokenvary 1 force-no-vary
 
 # Allow cookies to be set from iframes (for IE only)
 # If needed, specify a path or regex in the Location directive.
+# http://msdn.microsoft.com/en-us/library/ms537343.aspx
+# http://www.w3.org/TR/2000/CR-P3P-20001215/
 
 <IfModule mod_headers.c>
   Header set P3P "policyref=\"/w3c/p3p.xml\", CP=\"IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT\""
