@@ -298,7 +298,7 @@ module.exports = function (grunt) {
                 },
                 files: [{
                     expand: true,
-                    cwd: '<%%= yeoman.app %>',
+                    cwd: '<%%= yeoman.dist %>',
                     src: '{,*/}*.html',
                     dest: '<%%= yeoman.dist %>'
                 }]
@@ -316,6 +316,7 @@ module.exports = function (grunt) {
                         '*.{ico,png,txt}',
                         '.htaccess',
                         'images/**/*.{webp,gif}',
+                        '{,*/}*.html',
                         'styles/fonts/**/*.{eot,woff,ttf}',
                         'scripts/vendor/es5-shim.js'
                     ]
