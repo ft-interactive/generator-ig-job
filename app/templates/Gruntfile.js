@@ -399,10 +399,10 @@ module.exports = function (grunt) {
         },
         report: {
             demo: {
-                url: 'http://www.ft.com/ig/<%%= igdeploy.options.targets.demo %>/'
+                url: '<%%= igdeploy.options.baseURL %><%%= igdeploy.options.targets.demo %>/'
             },
             live: {
-                url: 'http://www.ft.com/ig/<%%= igdeploy.options.targets.live %>/'
+                url: '<%%= igdeploy.options.baseURL %><%%= igdeploy.options.targets.live %>/'
             }
         },
         concurrent: {
