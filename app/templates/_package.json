@@ -29,6 +29,7 @@
     "grunt-modernizr": "~0.3.0",<% } %>
     "grunt-embed": "~0.0.6",
     "grunt-igdeploy": "git+https://github.com/ft-interactive/grunt-igdeploy.git",
+    "grunt-report": "~0.0.4",
     "load-grunt-tasks": "~0.2.0",
     "grunt-newer": "~0.6.0",
     "time-grunt": "~0.2.0",
