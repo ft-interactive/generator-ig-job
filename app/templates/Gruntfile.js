@@ -360,11 +360,23 @@ module.exports = function (grunt) {
             options: {
                 src: 'dist',
                 server: 'ftlnx109-lviw-uk-p.osb.ft.com',
+                baseURL: 'http://www.ft.com/ig/',
                 targetRoot: '/var/opt/customer/apps/interactive.ftdata.co.uk/var/www/html',
                 targets: {
                     demo: '<%= deployBase %>/demo',
                     live: '<%= deployBase %>/live'
                 }
+            }
+        },
+        open: {
+            local: {
+                path: 'http://localhost:<%%= connect.options.port %><% if (includePublisher) { %>/publish.html<% } %>'
+            },
+            demo: {
+                path: '<%%= igdeploy.options.baseURL %><%%= igdeploy.options.targets.demo %>/'
+            },
+            live: {
+                path: '<%%= igdeploy.options.baseURL %><%%= igdeploy.options.targets.live %>/'
             }
         },<% if (includeModernizr) { %>
         modernizr: {
@@ -396,7 +408,7 @@ module.exports = function (grunt) {
         concurrent: {
             server: [<% if (includeHandlebars) { %>
                 'templates',<% } %><% if (includeModernizr) { %>
-                'modernizr',<% } %>
+                //'modernizr',<% } %>
                 'compass:server',
                 'copy:styles'
             ],
@@ -406,7 +418,7 @@ module.exports = function (grunt) {
             ],
             dist: [<% if (includeHandlebars) { %>
                 'templates',<% } %><% if (includeModernizr) { %>
-                'modernizr',<% } %>
+                //'modernizr',<% } %>
                 'compass',
                 'copy:styles',
                 'imagemin',
@@ -473,7 +485,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('default', [
         'newer:jshint',
-        'test',
+    //    'test',
         'build'
     ]);
 
