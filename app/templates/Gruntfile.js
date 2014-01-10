@@ -370,9 +370,6 @@ module.exports = function (grunt) {
             }
         },
         open: {
-            local: {
-                path: 'http://localhost:<%%= connect.options.port %><% if (includePublisher) { %>/publish.html<% } %>'
-            },
             demo: {
                 path: '<%%= igdeploy.options.baseURL %><%%= igdeploy.options.targets.demo %>/'
             },
