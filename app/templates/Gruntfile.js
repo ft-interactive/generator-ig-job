@@ -492,6 +492,17 @@ module.exports = function (grunt) {
     grunt.registerTask('deploy', function (target) {
         if (!grunt.file.isDir('dist')) {
             grunt.fail.fatal('Couldn\'t find "dist" - please build before deploying!');
+            return;
+        }
+
+        if (grunt.option('force')) {
+            grunt.fail.fatal('You cannot use the force flag to deploy');
+            return;
+        }
+
+        if (!target) {
+            grunt.fail.fatal('You must define a deploy target. Choose one of the following:\n\tgrunt deploy:demo\n\tgrunt deploy:live');
+            return;
         }
 
         grunt.task.run([
