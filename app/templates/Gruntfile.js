@@ -317,8 +317,7 @@ module.exports = function (grunt) {
                         '.htaccess',
                         'images/**/*.{webp,gif}',
                         '{,*/}*.html',
-                        'styles/fonts/**/*.{eot,woff,ttf}',
-                        'scripts/vendor/es5-shim.js'
+                        'styles/fonts/**/*.{eot,woff,ttf}'
                     ]
                 }]
             },

@@ -257,7 +257,6 @@ AppGenerator.prototype.app = function app() {
     this.copy('modernizr.json', 'modernizr.json');
   }
 
-  this.copy('es5-shim.js', 'app/scripts/vendor/es5-shim.js');
   this.mkdir('app');
 
   if (this.includeHandlebars) {
