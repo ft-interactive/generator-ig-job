@@ -12,8 +12,8 @@
 
         <!--#include virtual="/inc/extras-head-1.html" -->
 
-        <!-- build:css({.tmp,app}) styles/main.css -->
-        <link rel="stylesheet" href="bower_components/ig-furniture/furniture.css">
+        <!-- build:css({.tmp,app}) styles/main.css --><% if (includeFurniture) { %>
+        <link rel="stylesheet" href="bower_components/ig-furniture/furniture.css"><% } %>
         <link rel="stylesheet" href="styles/main.css">
         <!-- endbuild -->
     </head>
@@ -22,9 +22,9 @@
 
         <div id="main-content">
             <!-- Content here -->
-        </div>
+        </div><% if (includeFurniture) { %>
 
-        <footer class="furniture hidden"></footer>
+        <footer class="furniture hidden"></footer><% } %>
 
         <!--#include virtual="/inc/extras-foot-1.html" -->
     </body>

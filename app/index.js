@@ -71,6 +71,11 @@ AppGenerator.prototype.askFor = function askFor() {
       checked: true
     },
     {
+      name: 'Will the furniture be needed?',
+      value: 'furniture',
+      checked: true
+    },
+    {
       name: 'Modernizr',
       value: 'modernizr',
       checked: true
@@ -92,6 +97,7 @@ AppGenerator.prototype.askFor = function askFor() {
   this.includeModernizr = false;
   this.spreadsheetId = null;
   this.includeBerthaSpreadsheet = false;
+  this.includeFurniture = false;
   this.includeHandlebars = false;
   this.includeIFrame = true;
   this.includePublisher = false;
@@ -104,6 +110,7 @@ AppGenerator.prototype.askFor = function askFor() {
     gen.includeBerthaSpreadsheet = features.indexOf('bertha') !== -1;
     gen.includeHandlebars = features.indexOf('handlebars') !== -1;
     gen.includePublisher = gen.includeBerthaSpreadsheet && gen.includeIFrame;
+    gen.includeFurniture = features.indexOf('furniture') !== -1;
 
     var suggestedDeployBase = 'features/' + moment().format('YYYY-MM-DD') + '_' + path.basename(process.cwd());
     var deployBasePrompt = {
@@ -183,8 +190,7 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
 
   var bowerComponentScripts = [
     'bower_components/jquery/jquery.js',
-    'bower_components/ig-fill/fill.js',
-    'bower_components/ig-furniture/furniture.js'
+    'bower_components/ig-fill/fill.js'
   ];
 
   var templateScripts = [
@@ -193,6 +199,10 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
   ];
 
   var projectScripts = ['scripts/config.js'];
+
+  if (this.includeFurniture) {
+    bowerComponentScripts.push('bower_components/ig-furniture/furniture.js');
+  }
 
   if (this.includeIFrame) {
     bowerComponentScripts.push('bower_components/ig-utils/js/iframe-utils.js');
@@ -274,6 +284,7 @@ AppGenerator.prototype.app = function app() {
   if (this.includeBerthaSpreadsheet) {
     this.template('data.js', 'app/scripts/data.js');
   }
+
   this.template('config.js', 'app/scripts/config.js');
   this.template('main.js', 'app/scripts/main.js');
 };

@@ -1,4 +1,4 @@
-/*global app:true, Furniture:true, getIGSpreadsheet:true */
+/*global app:true<% if (includeFurniture) { %>, Furniture:true<%} %>, getIGSpreadsheet:true */
 
 
 (function (window, $) {
@@ -10,11 +10,11 @@
   }
 
   var processData = function processData(data) {
-    app.spreadsheet.rawData = data;
+    app.spreadsheet.rawData = data;<% if (includeFurniture) { %>
     Furniture.setCredits(data.credits);
     if (data.options && data.options.footnotes) {
       Furniture.setFootnotes(data.options.footnotes);
-    }
+    }<%} %>
   };
 
   // in case the Bertha request fails
