@@ -20,7 +20,6 @@ var AppGenerator = module.exports = function Appgenerator(args, options, config)
   // resolved to mocha by default (could be switched to jasmine for instance)
   this.hookFor('test-framework', { as: 'app' });
 
-  //this.indexFile = this.readFileAsString(path.join(this.sourceRoot(), 'index.html'));
   this.mainJsFile = '';
 
   this.on('end', function () {
@@ -39,7 +38,7 @@ var AppGenerator = module.exports = function Appgenerator(args, options, config)
         '      $ bower search\n\n'
       ];
       if (this.spreadsheetId) {
-        msg.push('Bertha republish URL: http://bertha.ig.ft.com/republish/publish/ig/' + this.spreadsheetId + '\n\n');
+        msg.push('Bertha republish URL: http://bertha.ig.ft.com/republish/publish/js/' + this.spreadsheetId + '/basic?d=app.data\n\n');
       }
       console.log(msg.join('\n   '));
     }.bind(this)});
@@ -195,10 +194,10 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
 
   var templateScripts = [
     'scripts/templates.js',
-    'scripts/handlebars-helpers.js'
+    'bower_components/ig-utils/js/handlebars-utils.js'
   ];
 
-  var projectScripts = ['scripts/config.js'];
+  var projectScripts = [];
 
   if (this.includeFurniture) {
     bowerComponentScripts.push('bower_components/ig-furniture/furniture.js');
@@ -208,11 +207,7 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
     bowerComponentScripts.push('bower_components/ig-utils/js/iframe-utils.js');
   }
 
-  if (this.includeBerthaSpreadsheet) {
-    bowerComponentScripts.push('bower_components/bertha-ig-gist/request.js');
-    projectScripts.push('scripts/data.js');
-  }
-
+  projectScripts.push('scripts/boilerplate.js');
   projectScripts.push('scripts/main.js');
 
   var scriptList;
@@ -238,7 +233,7 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
   this.indexFile = this.append(this.indexFile, 'head', '\n' + indent + '<!--#include virtual="/inc/extras-head-2.html" -->\n    ');
 
   // insert last Apache SSI tag after scripts
-  this.indexFile = this.append(this.indexFile, 'body', '\n' + indent + '<!--#include virtual="/inc/extras-foot-2.html" -->\n    ');
+  this.indexFile = this.append(this.indexFile, 'body', indent + '<!--#include virtual="/inc/extras-foot-2.html" -->\n    ');
 
   var bodyClasses = [];
 
@@ -261,7 +256,7 @@ AppGenerator.prototype.app = function app() {
 
   if (this.includeHandlebars) {
     this.mkdir('app/templates');
-    this.copy('handlebars-helpers.js', 'app/scripts/handlebars-helpers.js');
+    this.copy('main.hbs', 'app/templates/main.hbs');
   }
 
   this.mkdir('app/scripts');
@@ -280,10 +275,6 @@ AppGenerator.prototype.app = function app() {
   this.mkdir('artwork');
   this.copy('artwork.md', 'artwork/artwork.md');
 
-  if (this.includeBerthaSpreadsheet) {
-    this.template('data.js', 'app/scripts/data.js');
-  }
-
-  this.template('config.js', 'app/scripts/config.js');
+  this.template('boilerplate.js', 'app/scripts/boilerplate.js');
   this.template('main.js', 'app/scripts/main.js');
 };

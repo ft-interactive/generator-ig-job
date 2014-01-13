@@ -1,74 +1,53 @@
 /*global app:true */
-<% if (includeHandlebars) { %>/*global JST:true, Handlebars:true */<%} %>
 
 (function (window, $) {
 
   'use strict';
-<% if (includeIFrame) { %>
-  IG.iframeUtils.setDocumentDomain();
-<% } %>
-  // Scope all DOM queries and manipulation to a root element, not the body or document.
-  //   - YES: $el.find('#my-div');
-  //   - NO : $('#my-div');
-  var $el = $(app.config.container);
-  console.log($el);
 
-<% if (includeBerthaSpreadsheet) { %>
-  app.spreadsheet.get(function (data) {
+  var view = app.views.main;
 
-    // REMOVE: this console when you are happy the data is coming from the server
-    console.log('Data returned from Bertha', data);
-
-    // Makes "options" sheet available from a template helper
-    <% if (includeHandlebars) { %>Handlebars.createOptionsHelper(data.options);<% } %>
-
-
-    // ***** TODO: prepare data model *****
-
-
-  });
-<% } %>
-  $(function () {
-<% if (includeHandlebars) { %>
-
-    // REMOVE these two lines once you are happy that the templates are working as expected
-    console.log('You can see what template helpers have been registered here:', Handlebars.helpers);
-    if (window.JST) {
-      console.log('Templates have been attached to JST', JST);
+  view.render = function() {
+    if (!this.model) {
+      this.$el.html(this.messages.no_data);
+      return this;
     }
-<% } %>
 
-
-<% if (includeBerthaSpreadsheet) { %>
-    // ***** TODO: render the data model *****
+<% if (includeHandlebars) { %>
+    var  html = this.template(this.model);
+<% } else { %>
+    var html = '';
 <% } %>
+    this.$el.html(html);
 
 <% if (includeIFrame) { %>
     /**
-    * call this method after the DOM has rendered the initial view
-    * i.e after we know the height of the content.
-    * It will set the size of the parent frame to be the same
-    * as the size of the content.
+    * IFRAME RESIZING OPTION 1
+    * Set the size of the iframe to equal the content of this page.
     */
-    IG.iframeUtils.resizeParentFrameToContentSize();
+    //IG.iframeUtils.resizeParentFrameToContentSize();
 
     /**
-    * ... or, instead of the above example, you can
-    * call the following method...
-    *
-    * It sets the size of the parent frame along the sides
-    * that have not been set on the frame - i.e it will never override
+    * IFRAME RESIZING OPTION 2
+    * Sets the size of the iframe along the sides
+    * that have not been set on the parent document - i.e it will never override
     * the iframe's explicitly defined dimensions (unless it's 0px).
+    
+    * For more, see code docs:
+    * /bower_compnents/ig-utils/js/iframe-utils.js
     */
     // IG.iframeUtils.resizeZeroParentFrameValuesToContent();
-
-    /**
-    * This method makes sure all links open in a new tab.
-    * When using this you don't need to have target attributes
-    * on link (<a>) elements. Values: '_blank', '_top', '_parent'
-    */
-    IG.iframeUtils.targetLinks('_blank');
 <% } %>
+    return this;
+  };
+
+
+  $(function () {
+
+    // render the main view (see above)
+    view.render();
+
+    // Now the view has been rendered unhide the body
+    $(document.body).removeClass('invisible');
   });
 
 }(this, jQuery));
