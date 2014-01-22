@@ -113,6 +113,7 @@ module.exports = function (grunt) {
                     ]
                 }]
             },
+            upload: '.tmp/.upload',
             server: '.tmp'
         },
 
@@ -321,6 +322,14 @@ module.exports = function (grunt) {
                     ]
                 }]
             },
+            upload: {
+                files: [{
+                    expand: true,
+                    cwd: '<%%= yeoman.dist %>',
+                    src: ['**/*'],
+                    dest: '.tmp/.upload'
+                }],
+            },
             styles: {
                 expand: true,
                 dot: true,
@@ -358,7 +367,7 @@ module.exports = function (grunt) {
         },<% } %>
         igdeploy: {
             options: {
-                src: 'dist',
+                src: '.tmp/.upload',
                 server: 'ftlnx109-lviw-uk-p.osb.ft.com',
                 baseURL: 'http://www.ft.com/ig/',
                 targetRoot: '/var/opt/customer/apps/interactive.ftdata.co.uk/var/www/html',
@@ -400,6 +409,30 @@ module.exports = function (grunt) {
             },
             live: {
                 url: '<%%= igdeploy.options.baseURL %><%%= igdeploy.options.targets.live %>/'
+            }
+        },
+        cdnify: {
+            demo: {
+                files: [{
+                    expand: true,
+                    cwd: '.tmp/.upload',
+                    src: '**/*.{css,html}',
+                    dest: '.tmp/.upload'
+                }],
+                options: {
+                    base: '//interactivegraphics.ft-static.com/<%%= igdeploy.options.targets.demo %>/'
+                }
+            },
+            live: {
+                files: [{
+                    expand: true,
+                    cwd: '.tmp/.upload',
+                    src: '**/*.{css,html}',
+                    dest: '.tmp/.upload'
+                }],
+                options: {
+                    base: '//interactivegraphics.ft-static.com/<%%= igdeploy.options.targets.live %>/'
+                }
             }
         },
         concurrent: {
@@ -503,6 +536,9 @@ module.exports = function (grunt) {
         }
 
         grunt.task.run([
+            'clean:upload',
+            'copy:upload',
+            'cdnify:' + target,
             'igdeploy:' + target,
             'report:' + target,
             'open:' + target
