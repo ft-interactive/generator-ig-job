@@ -2,18 +2,39 @@
 
 Yeoman generator that scaffolds out an interactive-graphic/news-app.
 
+## Installing the generator
 
-## Getting Started
+    sudo npm install -g git+https://github.com/ft-interactive/generator-ig-job.git
+    
+## How to use
 
-- Install: `sudo npm install -g git+https://github.com/ft-interactive/generator-ig-job.git`
-- Run: `yo ig-job`
-- Run `grunt` for building and `grunt server` for preview
+### Generating a new project
 
-## Deploying
+1. Update yo, bower and this generator to the latest versions: `sudo npm install -g yo bower git+https://github.com/ft-interactive/generator-ig-job.git`
 
+2. Make a new directory and `cd` into it, then run the generator: `yo ig-job`
+
+3. Generate a basic modernizr.js file to start off with: `grunt modernizr`
+
+
+### Developing
+
+- Run `grunt serve` and start developing.
+
+- To install a new component, eg Backbone:
+  - Run `bower install backbone --save` (which will download it into your `bower_components` folder and make a note of it in `bower.json`)
+  - Add a `<script>` tag in your `index.html`, or `@import` it in your `main.scss`, as appropriate
+  - If you're not sure what a component's name is, try searching: `bower search backbone`
+
+- If you need any more Modernizr tests, you can add them in `modernizr.json` and then run `grunt modernizr` to regenerate your `modernizr.js`.
+
+
+### Deploying
+
+* Run `grunt build`, which creates an optimised version of your project in `dist`.
 * Type `grunt deploy:live` or `grunt deploy:demo`.
 
-You will need an `.igdeploy` file (ideally in your home directory), which should look like this:
+You will need an `.igdeploy` file (ideally in your home directory, so it works for all your projects), which should look like this:
 
 ```json
 {
@@ -25,6 +46,8 @@ You will need an `.igdeploy` file (ideally in your home directory), which should
 
 ## Options
 
+Flags you can use when running `yo ig-job`:
+
 * `--skip-install`
 
   Skips the automatic execution of `bower` and `npm` after scaffolding has finished.
@@ -32,13 +55,3 @@ You will need an `.igdeploy` file (ideally in your home directory), which should
 * `--test-framework <framework>`
 
   Defaults to `mocha`. Can be switched for another supported testing framework like `jasmine`.
-
-
-## Contribute
-
-See the [contributing docs](https://github.com/yeoman/yeoman/blob/master/contributing.md)
-
-
-## License
-
-[BSD license](http://opensource.org/licenses/bsd-license.php)
