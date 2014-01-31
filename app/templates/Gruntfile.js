@@ -475,9 +475,9 @@ module.exports = function (grunt) {
     // short alias for server
     grunt.registerTask('s', 'serve');
 
-    grunt.registerTask('server', function () {
+    grunt.registerTask('server', function (target) {
         grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
-        grunt.task.run(['serve']);
+        grunt.task.run([target ? ('serve:' + target) : 'serve']);
     });
 
     <% if (includeHandlebars) { %>grunt.registerTask('templates', [
@@ -485,12 +485,12 @@ module.exports = function (grunt) {
         'concat:handlebars'
     ]);<% } %>
 
-    grunt.registerTask('test', function(target) {
+    grunt.registerTask('test', function (target) {
         if (target !== 'watch') {
             grunt.task.run([
                 'clean:server',
                 'concurrent:test',
-                'autoprefixer',
+                'autoprefixer'
             ]);
         }
 
