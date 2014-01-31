@@ -305,7 +305,6 @@ AppGenerator.prototype.app = function app() {
   }
 
   this.mkdir('artwork');
-  this.copy('artwork.md', 'artwork/artwork.md');
 
   this.template('boilerplate.js', 'app/scripts/boilerplate.js');
   this.template('main.js', 'app/scripts/main.js');
