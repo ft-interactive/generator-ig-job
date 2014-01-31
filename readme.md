@@ -20,6 +20,7 @@ Yeoman generator that scaffolds out an interactive-graphic/news-app.
 ### Developing
 
 - Run `grunt serve` and start developing.
+  - If it fails to run, you might need to install dependencies: `npm install && bower install` (then try `grunt serve` again)
 
 - To install a new component, eg Backbone:
   - Run `bower install backbone --save` (which will download it into your `bower_components` folder and make a note of it in `bower.json`)
