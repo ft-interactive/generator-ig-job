@@ -1,6 +1,7 @@
 /*global app:true */
+/*global domready :true */
 
-(function (window, $) {
+(function () {
 
   'use strict';
 
@@ -8,7 +9,11 @@
 
   view.render = function() {
     if (!this.model) {
+<% if (flavour === 'jquery') { %>
       this.$el.html(this.messages.no_data);
+<% } else { %>
+      this.el.innerHTML = this.messages.no_data;
+<% } %>
       return this;
     }
 
@@ -16,9 +21,11 @@
     var  html = this.template(this.model);
 <% } else { %>
     var html = '';
-<% } %>
+<% } %><% if (flavour === 'jquery') { %>
     this.$el.html(html);
-
+<% } else { %>
+    this.el.innerHTML = html;
+<% } %>
 <% if (includeIFrame) { %>
     /**
     * IFRAME RESIZING OPTION 1
@@ -41,13 +48,15 @@
   };
 
 
-  $(function () {
+  domready(function () {
 
     // render the main view (see above)
     view.render();
 
-    // Now the view has been rendered unhide the body
-    $(document.body).removeClass('invisible');
+    // Now the view has been rendered unhide the content
+    // by removing the invisible class from the body
+    document.body.className.replace(/\binvisible\b/, '');
+
   });
 
-}(this, jQuery));
+}());

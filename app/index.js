@@ -32,7 +32,6 @@ var AppGenerator = module.exports = function Appgenerator(args, options, config)
         '  * lodash   : A utility library for consistency, customization, performance, and extra features.',
         '  * backbone  : Give your JS App some Backbone with Models, Views, Collections, and Events (requires lodash)',
         '  * isotope   : An exquisite jQuery plugin for magical layouts. Enables filtering, sorting, and dynamic layouts.',
-        '  * d3        : A JavaScript visualization library for HTML and SVG',
         '\n',
         '...to find more libs run:\n',
         '      $ bower search\n\n'
@@ -84,7 +83,28 @@ AppGenerator.prototype.askFor = function askFor() {
       value: 'handlebars',
       checked: true
     }]
-  }];
+  },
+  {
+    type: 'list',
+    message: 'What library will you be using for Ajax and DOM querying/manipulation?',
+    name: 'flavour',
+    choices: [{
+      name: 'jQuery',
+      value: 'jquery',
+      checked: true
+    },
+    {
+      name: 'D3',
+      value: 'd3',
+      checked: false
+    },
+    {
+      name: 'Vanilla JS - no library',
+      value: 'vanilla',
+      checked: false
+    }]
+  }
+  ];
 
   var promptSpreadsheetId = {
     type: 'input',
@@ -100,6 +120,7 @@ AppGenerator.prototype.askFor = function askFor() {
   this.includeHandlebars = false;
   this.includeIFrame = true;
   this.includePublisher = false;
+  this.flavour = '';
   var gen = this;
   gen.prompt(promptFeatures, function (answers) {
     var features = answers.features;
@@ -110,6 +131,9 @@ AppGenerator.prototype.askFor = function askFor() {
     gen.includeHandlebars = features.indexOf('handlebars') !== -1;
     gen.includePublisher = gen.includeBerthaSpreadsheet && gen.includeIFrame;
     gen.includeFurniture = features.indexOf('furniture') !== -1;
+    gen.flavour = answers.flavour;
+
+    console.log('Flav', gen.flavour);
 
     var suggestedDeployBase = 'features/' + moment().format('YYYY-MM-DD') + '_' + path.basename(process.cwd());
     var deployBasePrompt = {
@@ -188,9 +212,17 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
   this.indexFile = this.engine(this.indexFile, this);
 
   var bowerComponentScripts = [
-    'bower_components/jquery/jquery.js',
     'bower_components/ig-fill/fill.js'
   ];
+
+  if (this.flavour === 'jquery') {
+    bowerComponentScripts.push('bower_components/jquery/jquery.js');
+  } else if (this.flavour === 'd3') {
+    bowerComponentScripts.push('bower_components/domready/ready.js');
+    bowerComponentScripts.push('bower_components/d3/d3.js');
+  } else if (this.flavour === 'vanilla') {
+    bowerComponentScripts.push('bower_components/domready/ready.js');
+  }
 
   var templateScripts = [
     'scripts/templates.js',

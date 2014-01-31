@@ -1,10 +1,12 @@
 <% if (includeFurniture) { %>/*global Furniture:true */<%} %>
 <% if (includeHandlebars) { %>/*global JST:true */<% }%>
 
-(function (window, $) {
+(function (window) {
 
   'use strict';
-<% if (includeIFrame) { %>
+<% if (flavour === 'jquery') { %>
+  window.domready = $;
+<% } %><% if (includeIFrame) { %>
   IG.iframeUtils.setDocumentDomain();
 
   /**
@@ -39,8 +41,9 @@
   app.views.main = {
     messages: {
       no_data: 'Error loading data'
-    },
-    $el: $('#main-content'),<% if (includeHandlebars) { %>
+    },<% if (flavour === 'jquery') { %>
+    $el: $('#main-content'),<% } else { %>
+    el: document.getElementById('main-content'),<% } %><% if (includeHandlebars) { %>
     template: JST.main<% } %>
   };
 <% if (includeBerthaSpreadsheet) { %>
@@ -54,4 +57,4 @@
   }
 <% } %><% if (includeFurniture) { %>
   app.views.furniture.render();<% } %>
-}(this, jQuery));
+}(this));
