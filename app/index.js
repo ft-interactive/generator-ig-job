@@ -82,6 +82,11 @@ AppGenerator.prototype.askFor = function askFor() {
       name: 'Handlebars templates',
       value: 'handlebars',
       checked: true
+    },
+    {
+      name: 'IE 8 Shims - ES5 Shim, classList.js',
+      value: 'ie8shims',
+      checked: true
     }]
   },
   {
@@ -120,6 +125,7 @@ AppGenerator.prototype.askFor = function askFor() {
   this.includeHandlebars = false;
   this.includeIFrame = true;
   this.includePublisher = false;
+  this.includeIE8shims = false;
   this.flavour = '';
   var gen = this;
   gen.prompt(promptFeatures, function (answers) {
@@ -131,6 +137,7 @@ AppGenerator.prototype.askFor = function askFor() {
     gen.includeHandlebars = features.indexOf('handlebars') !== -1;
     gen.includePublisher = gen.includeBerthaSpreadsheet && gen.includeIFrame;
     gen.includeFurniture = features.indexOf('furniture') !== -1;
+    gen.includeIE8shims = features.indexOf('ie8shims') !== -1;
     gen.flavour = answers.flavour;
 
     console.log('Flav', gen.flavour);

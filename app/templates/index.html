@@ -13,7 +13,13 @@
         <!-- build:css({.tmp,app}) styles/main.css --><% if (includeFurniture) { %>
         <link rel="stylesheet" href="bower_components/ig-furniture/furniture.css"><% } %>
         <link rel="stylesheet" href="styles/main.css">
-        <!-- endbuild -->
+        <!-- endbuild --><% if (includeIE8shims) { %>
+
+        <!-- build:js({.tmp,app}) scripts/vendor/ie-lt9.js -->
+        <!--[if lt IE 9]>
+        <script src="bower_components/aight/aight.js"></script>
+        <![endif]-->
+        <!-- endbuild --><% } %>
     </head>
     <body>
         <!--#include virtual="/inc/fallback.html" -->
@@ -21,5 +27,5 @@
         <footer class="furniture hidden"></footer><% } %>
         <!--#include virtual="/inc/extras-foot-1.html" --><% if (includeBerthaSpreadsheet) { %>
         <script src="http://bertha.ig.ft.com/view/publish/js/<%= spreadsheetId %>/basic?d=app.data"></script><% } %>
-    </body>
+    </body> 
 </html>

@@ -4,7 +4,8 @@
   "dependencies": {<% if (flavour === 'jquery') { %>
     "jquery": "~1.9.1",<% } %><% if (flavour === 'd3') { %>
     "d3": "~3.4.1",<% } %><% if (flavour !== 'jquery') { %>
-    "domready": "*",<% } %>
+    "domready": "*",<% } %><% if (includeIE8shims) { %>
+    "aight": "~1.2.2",<% } %>
     "ig-fill": "https://gist.github.com/baa2d589782ec1eb4afc.git",<% if (includeFurniture) { %>
     "ig-furniture": "https://gist.github.com/375ebcf89f9aa70c0a1e.git",<% } %>
     "ig-utils": "https://github.com/ft-interactive/ig-utils.git",
