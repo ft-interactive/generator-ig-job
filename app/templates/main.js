@@ -5,23 +5,11 @@
 
   'use strict';
 
-  var view = app.views.main;
+  app.views.main.render = function() {
 
-  view.render = function() {
-    if (!this.model) {
+    var html = this.model ? <% if (includeHandlebars) { %>this.template(this.model)<% } else { %>''<% } %> : this.messages.no_data;
+
 <% if (flavour === 'jquery') { %>
-      this.$el.html(this.messages.no_data);
-<% } else { %>
-      this.el.innerHTML = this.messages.no_data;
-<% } %>
-      return this;
-    }
-
-<% if (includeHandlebars) { %>
-    var  html = this.template(this.model);
-<% } else { %>
-    var html = '';
-<% } %><% if (flavour === 'jquery') { %>
     this.$el.html(html);
 <% } else { %>
     this.el.innerHTML = html;
@@ -50,11 +38,11 @@
 
   domready(function () {
 
-    // render the main view (see above)
-    view.render();
+    // Render the main view (see above)
+    app.views.main.render();
 
-    // Now the view has been rendered unhide the content
-    // by removing the invisible class from the body
+    // Now the view has been rendered, unhide the content
+    // by removing the `invisible` class from the body.
     document.body.className.replace(/\binvisible\b/, '');
 
   });
