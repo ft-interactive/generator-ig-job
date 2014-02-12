@@ -43,7 +43,7 @@
 
     // Now the view has been rendered, unhide the content
     // by removing the `invisible` class from the body.
-    document.body.className.replace(/\binvisible\b/, '');
+    document.body.className = document.body.className.replace(/\binvisible\b/, '');
 
   });
 
