@@ -223,7 +223,7 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
   ];
 
   if (this.flavour === 'jquery') {
-    bowerComponentScripts.push('bower_components/jquery/jquery.js');
+    bowerComponentScripts.push('bower_components/jquery/dist/jquery.js');
   } else if (this.flavour === 'd3') {
     bowerComponentScripts.push('bower_components/domready/ready.js');
     bowerComponentScripts.push('bower_components/d3/d3.js');
