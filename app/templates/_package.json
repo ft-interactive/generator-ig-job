@@ -27,7 +27,7 @@
     "grunt-concurrent": "~0.4.0",<% if (includeHandlebars) { %>
     "grunt-contrib-handlebars": "~0.5.10",<% } %><% if (includeModernizr) { %>
     "grunt-modernizr": "~0.3.0",<% } %>
-    "grunt-embed": "~0.0.6",
+    "grunt-embed": "~0.1.1",
     "grunt-igdeploy": "git+https://github.com/ft-interactive/grunt-igdeploy.git",
     "grunt-report": "~0.0.4",
     "grunt-cdnify": "0.0.2",
