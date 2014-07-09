@@ -368,12 +368,18 @@ module.exports = function (grunt) {
         igdeploy: {
             options: {
                 src: '.tmp/.upload',
-                server: 'ftlnx109-lviw-uk-p.osb.ft.com',
+                host: 'ftlnx109-lviw-uk-p.osb.ft.com',
+                destPrefix: '/var/opt/customer/apps/interactive.ftdata.co.uk/var/www/html',
                 baseURL: 'http://www.ft.com/ig/',
-                targetRoot: '/var/opt/customer/apps/interactive.ftdata.co.uk/var/www/html',
-                targets: {
-                    demo: '<%= deployBase %>/demo',
-                    live: '<%= deployBase %>/live'
+            },
+            demo: {
+                options: {
+                    dest: 'demo/<%= deployBase %>'
+                }
+            },
+            live: {
+                options: {
+                    dest: '<%= deployBase %>'
                 }
             }
         },
@@ -471,7 +477,7 @@ module.exports = function (grunt) {
             'watch'
         ]);
     });
-    
+
     // short alias for server
     grunt.registerTask('s', 'serve');
 
