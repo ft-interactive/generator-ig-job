@@ -1,3 +1,7 @@
+# OBSOLETE
+
+Please use the [Project Starter Kit](http://ft-interactive.github.io/) instead.
+
 # Web app generator [![Build Status](https://secure.travis-ci.org/ft-interactive/generator-ig-job.png?branch=master)](http://travis-ci.org/ft-interactive/generator-ig-job)
 
 Yeoman generator that scaffolds out an interactive-graphic/news-app.
